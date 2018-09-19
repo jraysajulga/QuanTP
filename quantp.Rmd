@@ -597,13 +597,12 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 ```
 
 ```{r}
-p <- plot_ly(y = ~rnorm(50), type ="box") %>%
-        add_trace(y = ~rnorm(50, 1))
-p
-htmlwidgets::saveWidget(as_widget(p), "boxplot-test.html")
+outplot
+getwd()
 ```
 
-
+# OMEGA
+#multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
 ``` {r}
 
 #===============================================================================
@@ -628,8 +627,10 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
     {
       tempdf1$Group = c("case", "control")
       g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-      p <- plot_ly(y = tempdf1, type ="box")
-      htmlwidgets::saveWidget(as_widget(p), "boxplot-test.html")
+      p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample, color = tempdf1$Group, type ="box") %>%
+        layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
+      outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+      htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
     }
   }
   plot(g);
@@ -1039,10 +1040,6 @@ cat("<h3>Go To:</h3>\n",
     "<br><a href=#>TOP</a>",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
-
-```
-
-```{r}
 
 ```
 
