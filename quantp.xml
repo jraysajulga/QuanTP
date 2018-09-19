@@ -20,6 +20,7 @@ Rscript '$__tool_directory__/quantp.r'
     $hm_nclust 
     $experiment_design_option.volcano_with 
     '$html_file' 
+    '$jshtml_file' 
     '$html_file.files_path'
 ]]></command>
     <inputs>
@@ -90,6 +91,7 @@ Rscript '$__tool_directory__/quantp.r'
     </inputs>
     <outputs>
         <data format="html" name="html_file" label="protein transcript correlation on ${pe_exp.name} and ${te_exp.name}"/>
+        <data format="html" name="jshtml_file" label="(JS) protein transcript correlation on ${pe_exp.name} and ${te_exp.name}"/>
     </outputs>
     <tests>
         <test>

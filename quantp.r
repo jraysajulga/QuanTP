@@ -425,20 +425,20 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   tempdf1$Group = sampleinfo_df[tempdf1$Sample,2];
   png(outplot, width = 6, height = 6, units = 'in', res=300);
   # bitmap(outplot, "png16m");
-  if(fill_leg=="Yes")
-  {
-    g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-  }else{
-    if(fill_leg=="No")
-    {
-      tempdf1$Group = c("case", "control")
-      g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-    }
+  if(fill_leg=="No"){
+    tempdf1$Group = c("case", "control")
   }
+  g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
+  p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
+               color = tempdf1$Group,
+               colors = c("#F35E5A","#18B3B7"),
+               type ="box") %>%
+    layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
+  outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
   plot(g);
   dev.off();
 }
-
 
 #===============================================================================
 # Mean or Median of Replicates
@@ -636,7 +636,8 @@ hm_nclust = args[9];
 volc_with = args[10];
 
 htmloutfile = args[11]; # html output file
-outdir = args[12]; # html supporting files
+jshtmloutfile = args[12];
+outdir = args[13]; # html supporting files
 
 
 #===============================================================================
@@ -1003,3 +1004,10 @@ cat("<h3>Go To:</h3>\n",
     "<br><a href=#>TOP</a>",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
+
+#===============================================================================
+# Create JS outfile HTML
+#===============================================================================
+file.copy(htmloutfile, jshtmloutfile)
+tx <- readLines(htmloutfile)
+tx2 <- gsub()
