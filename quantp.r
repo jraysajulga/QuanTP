@@ -434,7 +434,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                colors = c("#F35E5A","#18B3B7"),
                type ="box") %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+  outfile <- paste('/', gsub("\\.png", "\\.html", outfile), sep="")
   htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile), selfcontained = FALSE)
   plot(g);
   dev.off();
@@ -617,7 +617,7 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 #===============================================================================
 # Arguments
 #===============================================================================
-noargs = 13;
+noargs = 12;
 args = commandArgs(trailingOnly = TRUE);
 if(length(args) != noargs)
 {
@@ -634,10 +634,8 @@ cookdist_upper_cutoff = args[7];
 numCluster = args[8];
 hm_nclust = args[9];
 volc_with = args[10];
-
 htmloutfile = args[11]; # html output file
-jshtmloutfile = args[12];
-outdir = args[13]; # html supporting files
+outdir = args[12]; # html supporting files
 
 
 #===============================================================================
@@ -1004,11 +1002,3 @@ cat("<h3>Go To:</h3>\n",
     "<br><a href=#>TOP</a>",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
-
-#===============================================================================
-# Create JS outfile HTML
-#===============================================================================
-tx <- readLines(htmloutfile)
-tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
-tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
-writeLines(tx3, con=jshtmloutfile)
