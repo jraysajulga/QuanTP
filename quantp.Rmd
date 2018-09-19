@@ -1,3 +1,14 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+
 #***************************************************************************************************************************************
 # Functions: Start
 #***************************************************************************************************************************************
@@ -611,14 +622,30 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 # Functions: End
 #***************************************************************************************************************************************
 
+```
 
+Arguments here
+
+``` {r}
 
 
 #===============================================================================
 # Arguments
 #===============================================================================
 noargs = 12;
-args = commandArgs(trailingOnly = TRUE);
+#args = commandArgs(trailingOnly = TRUE);
+args = c('multiple',
+         'mean',
+         'test-data/exp_design_file.tabular',
+         'test-data/protein_data.tabular',
+         'test-data/transcript_data.tabular',
+         'BH',
+         4,
+         4,
+         5,
+         'pval',
+         'test-files/test-output.html',
+         'test-files/')
 if(length(args) != noargs)
 {
   stop(paste("Please check usage. Number of arguments is not equal to ",noargs,sep="",collapse=""));
@@ -1003,3 +1030,17 @@ cat("<h3>Go To:</h3>\n",
     "<br><a href=#>TOP</a>",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+library(plotly)
+```
+
+
