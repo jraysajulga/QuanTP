@@ -435,7 +435,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                type ="box") %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
   outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
+  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile), selfcontained = FALSE)
   plot(g);
   dev.off();
 }
@@ -662,7 +662,7 @@ suppressPackageStartupMessages(library(data.table));
 suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
 suppressPackageStartupMessages(library(ggfortify));
-#suppressPackageStartupMessages(library(plotly));
+suppressPackageStartupMessages(library(plotly));
 
 #===============================================================================
 # Select mode and parse experiment design file
@@ -1010,4 +1010,6 @@ cat("</body></html>\n", file = htmloutfile, append = TRUE);
 #===============================================================================
 file.copy(htmloutfile, jshtmloutfile)
 tx <- readLines(htmloutfile)
-tx2 <- gsub()
+tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
+tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
+writeLines(tx3, con="test-files/test-jsoutput.html")
