@@ -1008,8 +1008,7 @@ cat("</body></html>\n", file = htmloutfile, append = TRUE);
 #===============================================================================
 # Create JS outfile HTML
 #===============================================================================
-file.copy(htmloutfile, jshtmloutfile)
 tx <- readLines(htmloutfile)
 tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
 tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
-writeLines(tx3, con="test-files/test-jsoutput.html")
+writeLines(tx3, con=jshtmloutfile)
