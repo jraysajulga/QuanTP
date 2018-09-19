@@ -618,21 +618,17 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   tempdf1$Group = sampleinfo_df[tempdf1$Sample,2];
   png(outplot, width = 6, height = 6, units = 'in', res=300);
   # bitmap(outplot, "png16m");
-  if(fill_leg=="Yes")
-  {
-    g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-    p <- plot_ly(y = tempdf1)
-  }else{
-    if(fill_leg=="No")
-    {
+  if(fill_leg=="No"){
       tempdf1$Group = c("case", "control")
-      g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-      p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample, color = tempdf1$Group, type ="box") %>%
-        layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-      outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
-      htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
-    }
   }
+  g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
+  p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
+               color = tempdf1$Group,
+               colors = c("#F35E5A","#18B3B7"),
+               type ="box") %>%
+      layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
+  outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
   plot(g);
   dev.off();
 }
@@ -674,6 +670,7 @@ volc_with = args[10];
 
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
+jshtmloutfile = "test-files/test-jsoutput.html"
 
 
 #===============================================================================
@@ -831,6 +828,10 @@ PE_nacount = sum(is.na(PE_df));
 TE_df[is.na(TE_df)] = 0;
 PE_df[is.na(PE_df)] = 0;
 
+#===============================================================================
+# Create JS outfile HTML
+#===============================================================================
+file.copy(htmloutfile, jshtmloutfile)
 
 #===============================================================================
 # Decide based on analysis mode
@@ -901,6 +902,11 @@ if(mode=="logfold")
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
+    # JS TE Boxplot
+    cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
+    '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+  "<tr><td align=center>", '<iframe src="Box_TE.html" width=500 height=500></td>\n', file = jshtmloutfile, append = TRUE);
+    multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
@@ -1041,6 +1047,12 @@ cat("<h3>Go To:</h3>\n",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
 
+```
+```{r}
+cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
+  '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+  "<tr><td align=center>", '<iframe src="Box_TE.html" width=500 height=500></td>\n', file = jshtmloutfile, append = TRUE);
+  multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
 ```
 
 
