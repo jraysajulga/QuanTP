@@ -617,7 +617,7 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 #===============================================================================
 # Arguments
 #===============================================================================
-noargs = 12;
+noargs = 13;
 args = commandArgs(trailingOnly = TRUE);
 if(length(args) != noargs)
 {
