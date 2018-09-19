@@ -597,8 +597,11 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 ```
 
 ```{r}
-outplot
-getwd()
+hello <- outplot
+hello %<>%
+  gsub("//", "-",.) %>%
+  gsub("\\.png", "",.)
+hello
 ```
 
 # OMEGA
@@ -627,8 +630,8 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                colors = c("#F35E5A","#18B3B7"),
                type ="box") %>%
       layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile))
+  #outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+  htmlwidgets::saveWidget(as_widget(p), paste(getwd(), '/', gsub("\\.png", "\\.html", outfile), sep=""), selfcontained = TRUE)
   plot(g);
   dev.off();
 }
@@ -672,6 +675,12 @@ htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
 jshtmloutfile = "test-files/test-jsoutput.html"
 
+
+#
+# Set up Plotly API authentication
+#
+Sys.setenv("plotly_username"="galaxyp")
+Sys.setenv("plotly_api_key"="L1gyrR7gtvy0vw4jlydq")
 
 #===============================================================================
 # Check for file existance
@@ -1037,21 +1046,33 @@ cat("<h3>Go To:</h3>\n",
     file = htmloutfile, append = TRUE);
 cat("</body></html>\n", file = htmloutfile, append = TRUE);
 
+
+
 #===============================================================================
 # Create JS outfile HTML
 #===============================================================================
+jshtmloutfile <- 'test-jsoutput.html'
 file.copy(htmloutfile, jshtmloutfile)
-tx <- readLines(htmloutfile)
-tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
-tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
-writeLines(tx3, con="test-files/test-jsoutput.html")
+#tx <- readLines(htmloutfile)
+#tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
+#tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
+#writeLines(tx3, con="test-files/test-jsoutput.html")
+```
+
+
+```{r}
+lines <- readLines('test-files//Box_TE_rep.html')
 ```
 
 ```{r}
-tx <- readLines(htmloutfile)
-tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
-tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
-writeLines(tx3, con="test-files/test-jsoutput.html")
+typeof(lines)
+#script <- filter(lines, 'script' %in% )
+#script
+scripts <- lapply(lines, grep, pattern="<script src", value=TRUE)
+javascripts <- lapply(lines, grep, pattern="<script type", value=TRUE)
+divs <- lapply(lines, grep, pattern="<div id", value=TRUE)
+divs
+
 ```
 
 
