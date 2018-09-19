@@ -424,34 +424,6 @@ singlesample_cor = function(PE_TE_data, htmloutfile, append=TRUE)
 }
 
 #===============================================================================
-# Boxplot
-#===============================================================================
-multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, user_ylab)
-{
-  tempdf = df[,-1, drop=FALSE];
-  tempdf = t(tempdf) %>% as.data.frame();
-  tempdf[is.na(tempdf)] = 0;
-  tempdf$Sample = rownames(tempdf);
-  tempdf1 = melt(tempdf, id.vars = "Sample");
-  tempdf1$Group = sampleinfo_df[tempdf1$Sample,2];
-  png(outplot, width = 6, height = 6, units = 'in', res=300);
-  # bitmap(outplot, "png16m");
-  if(fill_leg=="Yes")
-  {
-    g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-  }else{
-    if(fill_leg=="No")
-    {
-      tempdf1$Group = c("case", "control")
-      g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-    }
-  }
-  plot(g);
-  dev.off();
-}
-
-
-#===============================================================================
 # Mean or Median of Replicates
 #===============================================================================
 
@@ -624,9 +596,46 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 
 ```
 
-Arguments here
+```{r}
+p <- plot_ly(y = ~rnorm(50), type ="box") %>%
+        add_trace(y = ~rnorm(50, 1))
+p
+htmlwidgets::saveWidget(as_widget(p), "boxplot-test.html")
+```
+
 
 ``` {r}
+
+#===============================================================================
+# Boxplot
+#===============================================================================
+multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, user_ylab)
+{
+  tempdf = df[,-1, drop=FALSE];
+  tempdf = t(tempdf) %>% as.data.frame();
+  tempdf[is.na(tempdf)] = 0;
+  tempdf$Sample = rownames(tempdf);
+  tempdf1 = melt(tempdf, id.vars = "Sample");
+  tempdf1$Group = sampleinfo_df[tempdf1$Sample,2];
+  png(outplot, width = 6, height = 6, units = 'in', res=300);
+  # bitmap(outplot, "png16m");
+  if(fill_leg=="Yes")
+  {
+    g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
+    p <- plot_ly(y = tempdf1)
+  }else{
+    if(fill_leg=="No")
+    {
+      tempdf1$Group = c("case", "control")
+      g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
+      p <- plot_ly(y = tempdf1, type ="box")
+      htmlwidgets::saveWidget(as_widget(p), "boxplot-test.html")
+    }
+  }
+  plot(g);
+  dev.off();
+}
+
 
 
 #===============================================================================
@@ -1033,13 +1042,13 @@ cat("</body></html>\n", file = htmloutfile, append = TRUE);
 
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+```
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
+library(htmlwidgets)
 library(plotly)
 ```
 
