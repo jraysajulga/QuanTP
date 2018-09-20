@@ -817,7 +817,7 @@ PE_df[is.na(PE_df)] = 0;
 getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
-    'prescripts'  = paste('<!--',
+    'prescripts'  = c('<!--',
                           stringi::stri_reverse(gsub('script', 'placeholder',
                                                lines[grep('<script>',lines)[1]
                                                      :grep('</head>' ,lines)[1] - 1])),
