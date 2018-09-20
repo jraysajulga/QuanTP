@@ -815,7 +815,7 @@ PE_df[is.na(PE_df)] = 0;
 # Obtain JS/HTML lines for interactive visualization through Plot.ly
 #===============================================================================
 getPlotlyLines = function(name){
-  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
     'prescripts'  = paste(lines[grep('<script>',lines)[1]
                                 :grep('</head>',lines)[1]], sep="\n"),
