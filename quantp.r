@@ -881,6 +881,9 @@ if(mode=="logfold")
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_all_rep.png",sep="",collape="");
+    temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
+    colnames(temp_df_te_data) = colnames(TE_df);
+    multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
     lines <- getPlotlyLines('Box_TE_all_rep')
     prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
@@ -890,9 +893,6 @@ if(mode=="logfold")
         '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
         lines$plotly_div, '\n', 
         file = htmloutfile, append = TRUE);
-    temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
-    colnames(temp_df_te_data) = colnames(TE_df);
-    multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");

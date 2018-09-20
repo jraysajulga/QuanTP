@@ -851,11 +851,19 @@ if(mode=="logfold")
   file = htmloutfile, append = TRUE);
   
   # TE Boxplot
-  outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
-  cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
-  '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-  "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
-  multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
+    outplot = paste(outdir,"/Box_TE_all_rep.png",sep="",collape="");
+    temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
+    colnames(temp_df_te_data) = colnames(TE_df);
+    multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
+    lines <- getPlotlyLines('Box_TE_all_rep')
+    prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
+    cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
+        '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+        "<tr><td align=center>", 
+        '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
+        lines$plotly_div, '\n', 
+        file = htmloutfile, append = TRUE);
   
   # PE Boxplot
   outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
