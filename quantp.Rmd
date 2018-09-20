@@ -749,7 +749,6 @@ if(! file.exists(outdir))
 #===============================================================================
 # Write initial data summary in html outfile
 #===============================================================================
-    #lines <- getPlotlyLines('Box_TE_all_rep')
     #lines <- list('prescripts' = 'yo','plotly_div' = 'yo','postscripts' = 'yo')
 
     cat("<html><head></head><body>\n", file = htmloutfile);
@@ -827,19 +826,21 @@ PE_df[is.na(PE_df)] = 0;
 getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,name,'.html', sep=""))
   return(list(
-  'prescripts'  = paste('<!--',
-                        gsub('script', 'placeholder',
-                             lines[grep(lines, pattern='<script src')]),
-                        '-->', sep=''),
+  'prescripts'  = paste(lines[grep('<script>',lines)[1]
+                            :grep('</head>',lines)[1]], sep="\n"),
+  #'prescripts' = paste('',
+  #                      gsub('script', 'script',
+  #                           lines[grep(lines, pattern='<script src')]),
+  #                      '', sep=''),
   'plotly_div'  = paste('<!--',
                         gsub('width:100%;height:400px',
                              'width:500px;height:500px',
                              lines[grep(lines, pattern='plotly html-widget')]),
                         '-->', sep=''),
-  'postscripts' = paste('<!--',
-                        gsub('script', 'placeholder',
+  'postscripts' = paste('',
+                        gsub('script', 'script',
                              lines[grep(lines, pattern='<script type')]),
-                        '-->', sep='')));
+                        '', sep='')));
 }
 prescripts <- list()
 postscripts <- list()
@@ -915,18 +916,18 @@ if(mode=="logfold")
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_all_rep.png",sep="",collape="");
+    temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
+    colnames(temp_df_te_data) = colnames(TE_df);
+    multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
     lines <- getPlotlyLines('Box_TE_all_rep')
     prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
-    '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", 
-    '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
-    lines$plotly_div, '\n', 
-    file = htmloutfile, append = TRUE);
-    temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
-    colnames(temp_df_te_data) = colnames(TE_df);
-    multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
+        '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+        "<tr><td align=center>", 
+        '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
+        lines$plotly_div, '\n', 
+        file = htmloutfile, append = TRUE);
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
@@ -1095,9 +1096,36 @@ cat(lines$postscript, "\n",
 
 
 ```{r}
-
+getPlotlyLines = function(name){
+  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  return(list(
+  'prescripts'  = paste(lines[grep('<script>',lines)[1]
+                            :grep('</head>',lines)[1]], sep="\n"),
+  #'prescripts' = paste('',
+  #                      gsub('script', 'script',
+  #                           lines[grep(lines, pattern='<script src')]),
+  #                      '', sep=''),
+  'plotly_div'  = paste('<!--',
+                        gsub('width:100%;height:400px',
+                             'width:500px;height:500px',
+                             lines[grep(lines, pattern='plotly html-widget')]),
+                        '-->', sep=''),
+  'postscripts' = paste('',
+                        gsub('script', 'script',
+                             lines[grep(lines, pattern='<script type')]),
+                        '', sep='')));
+}
+test <- getPlotlyLines('Box_TE_all_rep')
+print(test$prescripts)
 ```
 
+```{r}
+name <- 'Box_TE_all_rep'
+lines <- readLines(paste(outdir,name,'.html', sep=""))
+head_scripts <- paste(lines[grep('<script>',lines)[1]
+                            :grep('</head>',lines)[1]], sep="\n")
+paste(head_scripts, sep="\n")[1:10]
+```
 
 
 ```{r}
@@ -1107,7 +1135,6 @@ cat(paste(prescripts, collapse='\n'), file='test.txt')
 htmllines <- readLines(htmloutfile)
 htmllines[1] <- paste('<html>\n<head>\n', paste(prescripts, collapse='\n'), '</head>\n<body>')
 htmllines[1:15]
-cat()
 ```
 
 #htmllines <- readLines(htmloutfile)

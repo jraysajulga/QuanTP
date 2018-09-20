@@ -815,21 +815,23 @@ PE_df[is.na(PE_df)] = 0;
 # Obtain JS/HTML lines for interactive visualization through Plot.ly
 #===============================================================================
 getPlotlyLines = function(name){
-  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
+  lines <- readLines(paste(outdir,name,'.html', sep=""))
   return(list(
-    'prescripts'  = paste('<!--',
-                          gsub('script', 'placeholder',
-                               lines[grep(lines, pattern='<script src')]),
-                          '-->', sep=''),
+    'prescripts'  = paste(lines[grep('<script>',lines)[1]
+                                :grep('</head>',lines)[1]], sep="\n"),
+    #'prescripts' = paste('',
+    #                      gsub('script', 'script',
+    #                           lines[grep(lines, pattern='<script src')]),
+    #                      '', sep=''),
     'plotly_div'  = paste('<!--',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='plotly html-widget')]),
                           '-->', sep=''),
-    'postscripts' = paste('<!--',
-                          gsub('script', 'placeholder',
+    'postscripts' = paste('',
+                          gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
-                          '-->', sep='')));
+                          '', sep='')));
 }
 prescripts <- list()
 postscripts <- list()
