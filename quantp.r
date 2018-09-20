@@ -30,20 +30,20 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   regmodel_summary = summary(regmodel);
   
   cat("<font><h3>Linear Regression model fit between Proteome and Transcriptome data</h3></font>\n",
-    "<p>Assuming a linear relationship between Proteome and Transcriptome data, we here fit a linear regression model.</p>\n",
-    '<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Parameter</font></th><th><font color=#ffcc33>Value</font></th></tr>\n',
-    file = htmloutfile, append = TRUE);
+      "<p>Assuming a linear relationship between Proteome and Transcriptome data, we here fit a linear regression model.</p>\n",
+      '<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Parameter</font></th><th><font color=#ffcc33>Value</font></th></tr>\n',
+      file = htmloutfile, append = TRUE);
   
   cat("<tr><td>Formula</td><td>","PE_abundance~TE_abundance","</td></tr>\n",
-    "<tr><td colspan='2' align='center'> <b>Coefficients</b></td>","</tr>\n",
-    "<tr><td>",names(regmodel$coefficients[1]),"</td><td>",regmodel$coefficients[1]," (Pvalue:", regmodel_summary$coefficients[1,4],")","</td></tr>\n",
-    "<tr><td>",names(regmodel$coefficients[2]),"</td><td>",regmodel$coefficients[2]," (Pvalue:", regmodel_summary$coefficients[2,4],")","</td></tr>\n",
-    "<tr><td colspan='2' align='center'> <b>Model parameters</b></td>","</tr>\n",
-    "<tr><td>Residual standard error</td><td>",regmodel_summary$sigma," (",regmodel_summary$df[2]," degree of freedom)</td></tr>\n",
-    "<tr><td>F-statistic</td><td>",regmodel_summary$fstatistic[1]," ( on ",regmodel_summary$fstatistic[2]," and  ",regmodel_summary$fstatistic[3]," degree of freedom)</td></tr>\n",
-    "<tr><td>R-squared</td><td>",regmodel_summary$r.squared,"</td></tr>\n",
-    "<tr><td>Adjusted R-squared</td><td>",regmodel_summary$adj.r.squared,"</td></tr>\n",
-    file = htmloutfile, append = TRUE);
+      "<tr><td colspan='2' align='center'> <b>Coefficients</b></td>","</tr>\n",
+      "<tr><td>",names(regmodel$coefficients[1]),"</td><td>",regmodel$coefficients[1]," (Pvalue:", regmodel_summary$coefficients[1,4],")","</td></tr>\n",
+      "<tr><td>",names(regmodel$coefficients[2]),"</td><td>",regmodel$coefficients[2]," (Pvalue:", regmodel_summary$coefficients[2,4],")","</td></tr>\n",
+      "<tr><td colspan='2' align='center'> <b>Model parameters</b></td>","</tr>\n",
+      "<tr><td>Residual standard error</td><td>",regmodel_summary$sigma," (",regmodel_summary$df[2]," degree of freedom)</td></tr>\n",
+      "<tr><td>F-statistic</td><td>",regmodel_summary$fstatistic[1]," ( on ",regmodel_summary$fstatistic[2]," and  ",regmodel_summary$fstatistic[3]," degree of freedom)</td></tr>\n",
+      "<tr><td>R-squared</td><td>",regmodel_summary$r.squared,"</td></tr>\n",
+      "<tr><td>Adjusted R-squared</td><td>",regmodel_summary$adj.r.squared,"</td></tr>\n",
+      file = htmloutfile, append = TRUE);
   
   cat("</table>\n", file = htmloutfile, append = TRUE);
   
@@ -74,7 +74,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
   
-    cat(
+  cat(
     '<tr bgcolor="#7a0019"><th>', "<font color='#ffcc33'><h4>1) <u>Residuals vs Fitted plot</h4></font></u></th>\n",
     '<th><font color=#ffcc33><h4>2) <u>Normal Q-Q plot of residuals</h4></font></u></th></tr>\n',
     file = htmloutfile, append = TRUE);
@@ -87,58 +87,58 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     '<tr><td align=center>This plot checks for linear relationship assumptions.<br>If a horizontal line is observed without any distinct patterns, it indicates a linear relationship.</td>\n',
     '<td align=center>This plot checks whether residuals are normally distributed or not.<br>It is good if the residuals points follow the straight dashed line i.e., do not deviate much from dashed line.</td></tr></table>\n',
     file = htmloutfile, append = TRUE);
-    
-    
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    # Residuals data
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    res_all = regmodel$residuals;
-    res_mean = mean(res_all);
-    res_sd = sd(res_all);
-    res_diff = (res_all-res_mean);
-    res_zscore = res_diff/res_sd;
-    # res_outliers = res_all[which((res_zscore > 2)|(res_zscore < -2))]
-    
-    
-    tempind = which((res_zscore > 2)|(res_zscore < -2));
-    res_PE_TE_data_no_outlier = PE_TE_data[-tempind,];
-    res_PE_TE_data_no_outlier$residuals = res_all[-tempind];
-    res_PE_TE_data_outlier = PE_TE_data[tempind,];
-    res_PE_TE_data_outlier$residuals = res_all[tempind];
+  
+  
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # Residuals data
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  res_all = regmodel$residuals;
+  res_mean = mean(res_all);
+  res_sd = sd(res_all);
+  res_diff = (res_all-res_mean);
+  res_zscore = res_diff/res_sd;
+  # res_outliers = res_all[which((res_zscore > 2)|(res_zscore < -2))]
+  
+  
+  tempind = which((res_zscore > 2)|(res_zscore < -2));
+  res_PE_TE_data_no_outlier = PE_TE_data[-tempind,];
+  res_PE_TE_data_no_outlier$residuals = res_all[-tempind];
+  res_PE_TE_data_outlier = PE_TE_data[tempind,];
+  res_PE_TE_data_outlier$residuals = res_all[tempind];
   
   # Save the complete table for download (influential_observations)
-    temp_outlier_data = data.frame(res_PE_TE_data_outlier$PE_ID, res_PE_TE_data_outlier$TE_abundance, res_PE_TE_data_outlier$PE_abundance, res_PE_TE_data_outlier$residuals)
-    colnames(temp_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Residual value")
-    outdatafile = paste(outdir,"/PE_TE_outliers_residuals.txt", sep="", collapse="");
-    write.table(temp_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
+  temp_outlier_data = data.frame(res_PE_TE_data_outlier$PE_ID, res_PE_TE_data_outlier$TE_abundance, res_PE_TE_data_outlier$PE_abundance, res_PE_TE_data_outlier$residuals)
+  colnames(temp_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Residual value")
+  outdatafile = paste(outdir,"/PE_TE_outliers_residuals.txt", sep="", collapse="");
+  write.table(temp_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
   
   
   # Save the complete table for download (non influential_observations)
-    temp_all_data = data.frame(PE_TE_data$PE_ID, PE_TE_data$TE_abundance, PE_TE_data$PE_abundance, res_all)
-    colnames(temp_all_data) = c("Gene", "Transcript abundance", "Protein abundance", "Residual value")
-    outdatafile = paste(outdir,"/PE_TE_abundance_residuals.txt", sep="", collapse="");
-    write.table(temp_all_data, file=outdatafile, row.names=F, sep="\t", quote=F);
+  temp_all_data = data.frame(PE_TE_data$PE_ID, PE_TE_data$TE_abundance, PE_TE_data$PE_abundance, res_all)
+  colnames(temp_all_data) = c("Gene", "Transcript abundance", "Protein abundance", "Residual value")
+  outdatafile = paste(outdir,"/PE_TE_abundance_residuals.txt", sep="", collapse="");
+  write.table(temp_all_data, file=outdatafile, row.names=F, sep="\t", quote=F);
   
   
   cat('<br><h2 id="inf_obs"><font color=#ff0000>Outliers based on the residuals from regression analysis</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
-  '<tr bgcolor="#7a0019"><th colspan=2><font color=#ffcc33>Residuals from Regression</font></th></tr>\n',
-   '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Parameter</font></th><th><font color=#ffcc33>Value</font></th></tr>\n',
-    file = htmloutfile, append = TRUE);
-    
+      '<tr bgcolor="#7a0019"><th colspan=2><font color=#ffcc33>Residuals from Regression</font></th></tr>\n',
+      '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Parameter</font></th><th><font color=#ffcc33>Value</font></th></tr>\n',
+      file = htmloutfile, append = TRUE);
+  
   cat("<tr><td>Mean Residual value</td><td>",res_mean,"</td></tr>\n",
-    "<tr><td>Standard deviation (Residuals)</td><td>",res_sd,"</td></tr>\n",
-    '<tr><td>Total outliers (Residual value > 2 standard deviation from the mean)</td><td>',length(tempind),' <font size=4>(<b><a href=PE_TE_outliers_residuals.txt target="_blank">Download these ',length(tempind),' data points with high residual values here</a></b>)</font></td>\n',
-    '<tr><td colspan=2 align=center><font size=4>(<b><a href=PE_TE_abundance_residuals.txt target="_blank">Download the complete residuals data here</a></b>)</font></td></td>\n',
-    "</table><br><br>\n",
-    file = htmloutfile, append = TRUE);
-    
+      "<tr><td>Standard deviation (Residuals)</td><td>",res_sd,"</td></tr>\n",
+      '<tr><td>Total outliers (Residual value > 2 standard deviation from the mean)</td><td>',length(tempind),' <font size=4>(<b><a href=PE_TE_outliers_residuals.txt target="_blank">Download these ',length(tempind),' data points with high residual values here</a></b>)</font></td>\n',
+      '<tr><td colspan=2 align=center><font size=4>(<b><a href=PE_TE_abundance_residuals.txt target="_blank">Download the complete residuals data here</a></b>)</font></td></td>\n',
+      "</table><br><br>\n",
+      file = htmloutfile, append = TRUE);
+  
   #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    
-    
+  
+  
   cat('<br><br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
-
+  
   cat(
     '<tr bgcolor="#7a0019"><th><font color=#ffcc33><h4>3) <u>Residuals vs Leverage plot</h4></font></u></th></tr>\n',
     file = htmloutfile, append = TRUE);
@@ -157,7 +157,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   # Cook's Distance
   #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   cat('<hr/><h2 id="inf_obs"><font color=#ff0000>INFLUENTIAL OBSERVATIONS</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   cat(
     '<p><b>Cook\'s distance</b> computes the influence of each data point/observation on the predicted outcome. i.e. this measures how much the observation is influencing the fitted values.<br>In general use, those observations that have a <b>Cook\'s distance > than ', cookdist_upper_cutoff,' times the mean</b> may be classified as <b>influential.</b></p>\n',
     file = htmloutfile, append = TRUE);
@@ -181,7 +181,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     '<img src="PE_TE_lm_cooksd.png" width=800 height=800>',
     '<br>In the above plot, observations above red line (',cookdist_upper_cutoff,' * mean Cook\'s distance) are influential. Genes that are outliers could be important. These observations influences the correlation values and regression coefficients<br><br>',
     file = htmloutfile, append = TRUE);    
-
+  
   tempind = which(cooksd>as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T));
   PE_TE_data_no_outlier = PE_TE_data[-tempind,];
   PE_TE_data_no_outlier$cooksd = cooksd[-tempind];
@@ -195,49 +195,49 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     file = htmloutfile, append = TRUE);
   
   # Save the complete table for download (influential_observations)
-    temp_outlier_data = data.frame(PE_TE_data_outlier$PE_ID, PE_TE_data_outlier$TE_abundance, PE_TE_data_outlier$PE_abundance, PE_TE_data_outlier$cooksd)
-    colnames(temp_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Cook's distance")
-    outdatafile = paste(outdir,"/PE_TE_influential_observation.txt", sep="", collapse="");
-    write.table(temp_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
+  temp_outlier_data = data.frame(PE_TE_data_outlier$PE_ID, PE_TE_data_outlier$TE_abundance, PE_TE_data_outlier$PE_abundance, PE_TE_data_outlier$cooksd)
+  colnames(temp_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Cook's distance")
+  outdatafile = paste(outdir,"/PE_TE_influential_observation.txt", sep="", collapse="");
+  write.table(temp_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
   
   
   # Save the complete table for download (non influential_observations)
-    temp_no_outlier_data = data.frame(PE_TE_data_no_outlier$PE_ID, PE_TE_data_no_outlier$TE_abundance, PE_TE_data_no_outlier$PE_abundance, PE_TE_data_no_outlier$cooksd)
-    colnames(temp_no_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Cook's distance")
-    outdatafile = paste(outdir,"/PE_TE_non_influential_observation.txt", sep="", collapse="");
-    write.table(temp_no_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
+  temp_no_outlier_data = data.frame(PE_TE_data_no_outlier$PE_ID, PE_TE_data_no_outlier$TE_abundance, PE_TE_data_no_outlier$PE_abundance, PE_TE_data_no_outlier$cooksd)
+  colnames(temp_no_outlier_data) = c("Gene", "Transcript abundance", "Protein abundance", "Cook's distance")
+  outdatafile = paste(outdir,"/PE_TE_non_influential_observation.txt", sep="", collapse="");
+  write.table(temp_no_outlier_data, file=outdatafile, row.names=F, sep="\t", quote=F);
   
   
   cat("<tr><td>Mean Cook\'s distance</td><td>",mean(cooksd, na.rm=T),"</td></tr>\n",
-    "<tr><td>Total influential observations (Cook\'s distance > ",cookdist_upper_cutoff," * mean Cook\'s distance)</td><td>",length(tempind),"</td>\n",
-    
-    "<tr><td>Observations with Cook\'s distance < ",cookdist_upper_cutoff," * mean Cook\'s distance</td><td>",length(which(cooksd<as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T))),"</td>\n",
-    "</table><br><br>\n",
-    file = htmloutfile, append = TRUE);
-    
-    
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    # Scatter plot after removal of influential points
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    outplot = paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse="");
-    min_lim = min(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
-    max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
-    png(outplot, width = 10, height = 10, units = 'in', res=300);
-    # bitmap(outplot,"png16m");
-    g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
-    suppressMessages(plot(g));
-    dev.off();
-    
-    cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatterplot: Before removal</font></th><th><font color=#ffcc33>Scatterplot: After removal</font></th></tr>\n', file = htmloutfile, append = TRUE);
-    # Before
-    cat("<tr><td align=center><!--<font color='#ff0000'><h3>Scatter plot between Proteome and Transcriptome Abundance</h3></font>\n-->", '<img src="TE_PE_scatter.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
-    
-    # After
-    cat("<td align=center>\n",
-    '<img src="AbundancePlot_scatter_without_outliers.png" width=600 height=600></td></tr>\n',
-    file = htmloutfile, append = TRUE);
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    
+      "<tr><td>Total influential observations (Cook\'s distance > ",cookdist_upper_cutoff," * mean Cook\'s distance)</td><td>",length(tempind),"</td>\n",
+      
+      "<tr><td>Observations with Cook\'s distance < ",cookdist_upper_cutoff," * mean Cook\'s distance</td><td>",length(which(cooksd<as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T))),"</td>\n",
+      "</table><br><br>\n",
+      file = htmloutfile, append = TRUE);
+  
+  
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # Scatter plot after removal of influential points
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  outplot = paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse="");
+  min_lim = min(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
+  max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
+  png(outplot, width = 10, height = 10, units = 'in', res=300);
+  # bitmap(outplot,"png16m");
+  g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
+  suppressMessages(plot(g));
+  dev.off();
+  
+  cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatterplot: Before removal</font></th><th><font color=#ffcc33>Scatterplot: After removal</font></th></tr>\n', file = htmloutfile, append = TRUE);
+  # Before
+  cat("<tr><td align=center><!--<font color='#ff0000'><h3>Scatter plot between Proteome and Transcriptome Abundance</h3></font>\n-->", '<img src="TE_PE_scatter.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
+  
+  # After
+  cat("<td align=center>\n",
+      '<img src="AbundancePlot_scatter_without_outliers.png" width=600 height=600></td></tr>\n',
+      file = htmloutfile, append = TRUE);
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  
   
   cor_result_pearson = cor.test(PE_TE_data_no_outlier[,"TE_abundance"], PE_TE_data_no_outlier[,"PE_abundance"], method = "pearson");
   cor_result_spearman = cor.test(PE_TE_data_no_outlier[,"TE_abundance"], PE_TE_data_no_outlier[,"PE_abundance"], method = "spearman");
@@ -249,7 +249,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   
   
   cat('<td><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Parameter</font></th><th><font color=#ffcc33>Method 1</font></th><th><font color=#ffcc33>Method 2</font></th><th><font color=#ffcc33>Method 3</font></th></tr>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   cat(
     "<tr><td>Correlation method</td><td>",cor_result_pearson$method,"</td><td>",cor_result_spearman$method,"</td><td>",cor_result_kendall$method,"</td></tr>\n",
@@ -267,13 +267,13 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   }
   
   cat("<br><br><font size=5><b><a href='PE_TE_influential_observation.txt' target='_blank'>Download the complete list of influential observations</a></b></font>&nbsp;&nbsp;&nbsp;&nbsp;",
-  "<font size=5><b><a href='PE_TE_non_influential_observation.txt' target='_blank'>Download the complete list (After removing influential points)</a></b></font><br>\n",
-  '<br><font color="brown"><h4>Top ',as.character(tab_n_row),' Influential observations (Cook\'s distance > ',cookdist_upper_cutoff,' * mean Cook\'s distance)</h4></font>\n',
-    file = htmloutfile, append = TRUE);
+      "<font size=5><b><a href='PE_TE_non_influential_observation.txt' target='_blank'>Download the complete list (After removing influential points)</a></b></font><br>\n",
+      '<br><font color="brown"><h4>Top ',as.character(tab_n_row),' Influential observations (Cook\'s distance > ',cookdist_upper_cutoff,' * mean Cook\'s distance)</h4></font>\n',
+      file = htmloutfile, append = TRUE);
   
   cat('<table border=1 cellspacing=0 cellpadding=5> <tr bgcolor="#7a0019">\n', sep = "",file = htmloutfile, append = TRUE);
   cat("<th><font color=#ffcc33>Gene</font></th><th><font color=#ffcc33>Protein Log Fold-Change</font></th><th><font color=#ffcc33>Transcript Log Fold-Change</font></th><th><font color=#ffcc33>Cook's Distance</font></th></tr>\n",
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   
   for(i in 1:tab_n_row)
@@ -285,9 +285,9 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
       '<td>',format(PE_TE_data_outlier_sorted[i,5], scientific=F),'</td></tr>\n',
       file = htmloutfile, append = TRUE);
   }
-    cat('</table><br><br>\n',file = htmloutfile, append = TRUE);
-    
-    
+  cat('</table><br><br>\n',file = htmloutfile, append = TRUE);
+  
+  
 }
 
 
@@ -297,7 +297,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
 #===============================================================================
 singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   cat('<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Heatmap of PE and TE abundance values (Hierarchical clustering)</font></th><th><font color=#ffcc33>Number of clusters to extract: ',hm_nclust,'</font></th></tr>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   hc=hclust(dist(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")])))
   hm_cluster = cutree(hc,k=hm_nclust);
@@ -310,7 +310,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   dev.off();
   
   cat('<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800></td></tr>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   
   temp_PE_TE_data = data.frame(PE_TE_data$PE_ID, PE_TE_data$TE_abundance, PE_TE_data$PE_abundance, hm_cluster);
@@ -320,7 +320,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   
   
   cat('<tr><td colspan="2" align=center><font size=5><a href="PE_TE_hc_clusterpoints.txt" target="_blank"><b>Download the hierarchical cluster list</b></a></font></td></tr></table>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
 }
 
 
@@ -362,7 +362,7 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   dev.off();
   
   cat('<br><br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>K-mean clustering</font></th><th><font color=#ffcc33>Number of clusters: ',nclust,'</font></th></tr>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   tempind = order(k1$cluster);
   tempoutfile = paste(outdir,"/PE_TE_kmeans_clusterpoints.txt",sep="",collapse="");
@@ -370,9 +370,9 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   
   
   cat('<tr><td colspan="2" align=center><img src="PE_TE_kmeans.png" width=800 height=800></td></tr>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   cat('<tr><td colspan="2" align=center><font size=5><a href="PE_TE_kmeans_clusterpoints.txt" target="_blank"><b>Download the cluster list</b></a></font></td></tr></table><br><hr/>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
 }
 
@@ -463,35 +463,35 @@ saveWidgetFix <- function (widget,file,...) {
 
 mergeReplicates = function(TE_df,PE_df, sampleinfo_df, method)
 {
-grps = unique(sampleinfo_df[,2]);
-
-TE_df_merged <<- sapply(grps, function(x){
-  tempsample = sampleinfo_df[which(sampleinfo_df$Group==x),1]
-  if(length(tempsample)!=1){
-    apply(TE_df[,tempsample],1,method);
-  }else{
-    return(TE_df[,tempsample]);
-  }
-});
-TE_df_merged <<-   data.frame(as.character(TE_df[,1]), TE_df_merged);
-colnames(TE_df_merged) = c(colnames(TE_df)[1], grps);
-
-PE_df_merged <<- sapply(grps, function(x){
-  tempsample = sampleinfo_df[which(sampleinfo_df$Group==x),1]
-  if(length(tempsample)!=1){
-    apply(PE_df[,tempsample],1,method);
-  }else{
-    return(PE_df[,tempsample]);
-  }
-});
-
-PE_df_merged <<-   data.frame(as.character(PE_df[,1]), PE_df_merged);
-colnames(PE_df_merged) = c(colnames(PE_df)[1], grps);
-
-#sampleinfo_df_merged =  data.frame(Sample = grps, Group = grps, stringsAsFactors = F);
-sampleinfo_df_merged =  data.frame(Sample = grps, Group = "Group", stringsAsFactors = F);
-
-return(list(TE_df_merged = TE_df_merged, PE_df_merged = PE_df_merged, sampleinfo_df_merged = sampleinfo_df_merged));
+  grps = unique(sampleinfo_df[,2]);
+  
+  TE_df_merged <<- sapply(grps, function(x){
+    tempsample = sampleinfo_df[which(sampleinfo_df$Group==x),1]
+    if(length(tempsample)!=1){
+      apply(TE_df[,tempsample],1,method);
+    }else{
+      return(TE_df[,tempsample]);
+    }
+  });
+  TE_df_merged <<-   data.frame(as.character(TE_df[,1]), TE_df_merged);
+  colnames(TE_df_merged) = c(colnames(TE_df)[1], grps);
+  
+  PE_df_merged <<- sapply(grps, function(x){
+    tempsample = sampleinfo_df[which(sampleinfo_df$Group==x),1]
+    if(length(tempsample)!=1){
+      apply(PE_df[,tempsample],1,method);
+    }else{
+      return(PE_df[,tempsample]);
+    }
+  });
+  
+  PE_df_merged <<-   data.frame(as.character(PE_df[,1]), PE_df_merged);
+  colnames(PE_df_merged) = c(colnames(PE_df)[1], grps);
+  
+  #sampleinfo_df_merged =  data.frame(Sample = grps, Group = grps, stringsAsFactors = F);
+  sampleinfo_df_merged =  data.frame(Sample = grps, Group = "Group", stringsAsFactors = F);
+  
+  return(list(TE_df_merged = TE_df_merged, PE_df_merged = PE_df_merged, sampleinfo_df_merged = sampleinfo_df_merged));
 }
 
 #===============================================================================
@@ -500,127 +500,127 @@ return(list(TE_df_merged = TE_df_merged, PE_df_merged = PE_df_merged, sampleinfo
 
 perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfold,sampleinfo_df, method, correction_method,volc_with)
 {
-
-PE_colnames = colnames(PE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  #PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-if(method=="median"){
-    PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-    # PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-PE_adj_pval = p.adjust(PE_pval, method = correction_method, n = length(PE_pval))
-
-
-TE_colnames = colnames(TE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-  if(method=="median"){
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-TE_adj_pval = p.adjust(TE_pval, method = correction_method, n = length(TE_pval))
-
-
-PE_TE_logfold_pval = data.frame(TE_df_logfold$Gene, TE_df_logfold$LogFold, TE_pval, TE_adj_pval, PE_df_logfold$LogFold, PE_pval, PE_adj_pval);
-colnames(PE_TE_logfold_pval) = c("Gene", "Transcript log fold-change", "p-value (transcript)", "adj p-value (transcript)", "Protein log fold-change", "p-value (protein)", "adj p-value (protein)");
-outdatafile = paste(outdir,"/PE_TE_logfold_pval.txt", sep="", collapse="");
-write.table(PE_TE_logfold_pval, file=outdatafile, row.names=F, sep="\t", quote=F);
-cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Download the complete fold change data here</a></b></font><br>\n",
-    file = htmloutfile, append = TRUE);
-
-    if(length(condition_ind)!=1)
-        {
-        # Volcano Plot
-
-        if(volc_with=="adj_pval")
-        {
-            PE_pval = PE_adj_pval
-            TE_pval = TE_adj_pval
-            volc_ylab = "-log10 Adjusted p-value";
-        }else{
-          if(volc_with=="pval")
-          {
-            volc_ylab = "-log10 p-value";
-          }
-        }
-        outplot = paste(outdir,"/PE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
   
-        plot(PE_df_logfold$LogFold, -log10(PE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        sel <- which((PE_df_logfold$LogFold<=log(2,base=2))&(PE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="black")
-        #sel <- which((PE_df_logfold$LogFold>log(2,base=2))&(PE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="red")
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
+  PE_colnames = colnames(PE_df_data);
+  control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
+  control_ind <<- sapply(control_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
+  condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
+  condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
   
-
-
-        outplot = paste(outdir,"/TE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
-
-        plot(TE_df_logfold$LogFold, -log10(TE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
-        #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="red")
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
-
-
-
-        cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
-            cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
-            cat("<td align=center>",
-            '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
-            file = htmloutfile, append = TRUE);
-    }else{
-        cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
-        file = htmloutfile, append = TRUE);
+  if(method=="mean"){
+    #PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
+    PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
+  }else{
+    if(method=="median"){
+      PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
+      # PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
     }
-
+  }
+  PE_adj_pval = p.adjust(PE_pval, method = correction_method, n = length(PE_pval))
+  
+  
+  TE_colnames = colnames(TE_df_data);
+  control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
+  control_ind <<- sapply(control_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
+  condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
+  condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
+  
+  if(method=="mean"){
+    # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
+    TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
+  }else{
+    if(method=="median"){
+      TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
+      # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
+    }
+  }
+  TE_adj_pval = p.adjust(TE_pval, method = correction_method, n = length(TE_pval))
+  
+  
+  PE_TE_logfold_pval = data.frame(TE_df_logfold$Gene, TE_df_logfold$LogFold, TE_pval, TE_adj_pval, PE_df_logfold$LogFold, PE_pval, PE_adj_pval);
+  colnames(PE_TE_logfold_pval) = c("Gene", "Transcript log fold-change", "p-value (transcript)", "adj p-value (transcript)", "Protein log fold-change", "p-value (protein)", "adj p-value (protein)");
+  outdatafile = paste(outdir,"/PE_TE_logfold_pval.txt", sep="", collapse="");
+  write.table(PE_TE_logfold_pval, file=outdatafile, row.names=F, sep="\t", quote=F);
+  cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Download the complete fold change data here</a></b></font><br>\n",
+      file = htmloutfile, append = TRUE);
+  
+  if(length(condition_ind)!=1)
+  {
+    # Volcano Plot
+    
+    if(volc_with=="adj_pval")
+    {
+      PE_pval = PE_adj_pval
+      TE_pval = TE_adj_pval
+      volc_ylab = "-log10 Adjusted p-value";
+    }else{
+      if(volc_with=="pval")
+      {
+        volc_ylab = "-log10 p-value";
+      }
+    }
+    outplot = paste(outdir,"/PE_volcano.png",sep="",collapse="");
+    png(outplot, width = 10, height = 10, units = 'in', res=300);
+    # bitmap(outplot, "png16m");
+    par(mfrow=c(1,1));
+    
+    plot(PE_df_logfold$LogFold, -log10(PE_pval),
+         xlab="log2 fold change", ylab=volc_ylab,
+         type="n")
+    sel <- which((PE_df_logfold$LogFold<=log(2,base=2))&(PE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
+    points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="black")
+    #sel <- which((PE_df_logfold$LogFold>log(2,base=2))&(PE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
+    sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
+    sel1 <- which(PE_pval<=0.05)
+    sel=intersect(sel,sel1)
+    points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="red")
+    sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
+    sel1 <- which(PE_pval>0.05)
+    sel=intersect(sel,sel1)
+    points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="blue")
+    abline(h = -log(0.05,base=10), col="red", lty=2)
+    abline(v = log(2,base=2), col="red", lty=2)
+    abline(v = log(0.5,base=2), col="red", lty=2)
+    dev.off();
+    
+    
+    
+    outplot = paste(outdir,"/TE_volcano.png",sep="",collapse="");
+    png(outplot, width = 10, height = 10, units = 'in', res=300);
+    # bitmap(outplot, "png16m");
+    par(mfrow=c(1,1));
+    
+    plot(TE_df_logfold$LogFold, -log10(TE_pval),
+         xlab="log2 fold change", ylab=volc_ylab,
+         type="n")
+    sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
+    points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
+    #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
+    sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
+    sel1 <- which(TE_pval<=0.05)
+    sel=intersect(sel,sel1)
+    points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="red")
+    sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
+    sel1 <- which(TE_pval>0.05)
+    sel=intersect(sel,sel1)
+    points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="blue")
+    abline(h = -log(0.05,base=10), col="red", lty=2)
+    abline(v = log(2,base=2), col="red", lty=2)
+    abline(v = log(0.5,base=2), col="red", lty=2)
+    dev.off();
+    
+    
+    
+    cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
+    cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
+    cat("<td align=center>",
+        '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
+        file = htmloutfile, append = TRUE);
+  }else{
+    cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
+        file = htmloutfile, append = TRUE);
+  }
+  
 }
 
 
@@ -817,10 +817,10 @@ PE_df[is.na(PE_df)] = 0;
 getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
-    'prescripts'  = c('<!--',
-                          stringi::stri_reverse(gsub('script', 'placeholder',
-                                               lines[grep('<script>',lines)[1]
-                                                     :grep('</head>' ,lines)[1] - 1])),
+    'prescripts'  = paste('<!--',
+                          rev(stringi::stri_reverse(gsub('script', 'script',
+                                                         lines[grep('<script>',lines)[1]
+                                                               :grep('</head>' ,lines)[1] - 1]))),
                           '-->'),
     #'prescripts' = paste('',
     #                      gsub('script', 'script',
