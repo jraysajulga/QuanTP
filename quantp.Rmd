@@ -1096,11 +1096,15 @@ cat(lines$postscript, "\n",
 
 
 ```{r}
+outdir <- 'test-files/'
 getPlotlyLines = function(name){
-  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
-  'prescripts'  = paste(lines[grep('<script>',lines)[1]
-                            :grep('</head>',lines)[1]], sep="\n"),
+  'prescripts'  = paste('<!--',
+                          stringi::stri_reverse(gsub('script', 'placeholder',
+                                               lines[grep('<script>',lines)[1]
+                                                     :grep('</head>' ,lines)[1] - 1])),
+                          '-->'),
   #'prescripts' = paste('',
   #                      gsub('script', 'script',
   #                           lines[grep(lines, pattern='<script src')]),
@@ -1116,16 +1120,15 @@ getPlotlyLines = function(name){
                         '', sep='')));
 }
 test <- getPlotlyLines('Box_TE_all_rep')
-print(test$prescripts)
+print(test$prescripts[1:10])
 ```
 
-```{r}
-name <- 'Box_TE_all_rep'
-lines <- readLines(paste(outdir,name,'.html', sep=""))
-head_scripts <- paste(lines[grep('<script>',lines)[1]
-                            :grep('</head>',lines)[1]], sep="\n")
-paste(head_scripts, sep="\n")[1:10]
-```
+#name <- 'Box_TE_all_rep'
+#lines <- readLines(paste(outdir,name,'.html', sep=""))
+#head_scripts <- paste(lines[grep('<script>',lines)[1]
+#                            :grep('</head>',lines)[1]], sep="\n")
+#paste(head_scripts, sep="\n")[1:10]
+
 
 
 ```{r}
