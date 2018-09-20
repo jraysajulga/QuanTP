@@ -611,6 +611,7 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 #===============================================================================
 
 getPlotlyLines = function(name){
+  print(paste(outdir,name,'.html',sep=""))
   lines <- readLines(paste(outdir,name,'.html', sep=""))
   return(list(
     'prescripts'  = paste('<!--',
@@ -682,32 +683,32 @@ suppressPackageStartupMessages(library(data.table));
 suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
 suppressPackageStartupMessages(library(ggfortify));
-suppressPackageStartupMessages(library(plotly));
+#suppressPackageStartupMessages(library(plotly));
 
 #===============================================================================
 # Select mode and parse experiment design file
 #===============================================================================
 if(mode=="multiple")
 {
-    expDesign = fread(sampleinfo_file, header = FALSE, stringsAsFactors = FALSE, sep="\t") %>% data.frame();
-    expDesign_cc = expDesign[1:2,];
-    
-    sampleinfo_df = expDesign[3:nrow(expDesign),];
-    rownames(sampleinfo_df)=1:nrow(sampleinfo_df);
-    colnames(sampleinfo_df) =  c("Sample","Group");
-    
-    condition_cols = sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="case"),2]),1];
-    condition_g_name = "case";
-    control_cols = sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="control"),2]),1];
-    control_g_name = "control";
-    sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="case"),2]),2] = "case";
-    sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="control"),2]),2] = "control";
-    sampleinfo_df_orig = sampleinfo_df;
+  expDesign = fread(sampleinfo_file, header = FALSE, stringsAsFactors = FALSE, sep="\t") %>% data.frame();
+  expDesign_cc = expDesign[1:2,];
+  
+  sampleinfo_df = expDesign[3:nrow(expDesign),];
+  rownames(sampleinfo_df)=1:nrow(sampleinfo_df);
+  colnames(sampleinfo_df) =  c("Sample","Group");
+  
+  condition_cols = sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="case"),2]),1];
+  condition_g_name = "case";
+  control_cols = sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="control"),2]),1];
+  control_g_name = "control";
+  sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="case"),2]),2] = "case";
+  sampleinfo_df[which(sampleinfo_df[,2]==expDesign_cc[which(expDesign_cc[,1]=="control"),2]),2] = "control";
+  sampleinfo_df_orig = sampleinfo_df;
 }
 
 if(mode=="logfold")
 {
-    sampleinfo_df = data.frame("Sample"= c("LogFold"), "Group"=c("Fold_Change"))
+  sampleinfo_df = data.frame("Sample"= c("LogFold"), "Group"=c("Fold_Change"))
 }
 
 #===============================================================================
@@ -716,12 +717,12 @@ if(mode=="logfold")
 TE_df_orig = fread(transcriptome_file, sep="\t", stringsAsFactor=F, header=T) %>% data.frame();
 if(mode=="multiple")
 {
-    TE_df = TE_df_orig[,c(colnames(TE_df_orig)[1],condition_cols,control_cols)];
+  TE_df = TE_df_orig[,c(colnames(TE_df_orig)[1],condition_cols,control_cols)];
 }
 if(mode=="logfold")
 {
-    TE_df = TE_df_orig;
-    colnames(TE_df) = c("Genes", "LogFold");
+  TE_df = TE_df_orig;
+  colnames(TE_df) = c("Genes", "LogFold");
 }
 #===============================================================================
 # Parse Proteome data
@@ -729,12 +730,12 @@ if(mode=="logfold")
 PE_df_orig = fread(proteome_file, sep="\t", stringsAsFactor=F, header=T) %>% data.frame();
 if(mode=="multiple")
 {
-    PE_df = PE_df_orig[,c(colnames(PE_df_orig)[1],condition_cols,control_cols)];
+  PE_df = PE_df_orig[,c(colnames(PE_df_orig)[1],condition_cols,control_cols)];
 }
 if(mode=="logfold")
 {
-    PE_df = PE_df_orig;
-    colnames(PE_df) = c("Genes", "LogFold");
+  PE_df = PE_df_orig;
+  colnames(PE_df) = c("Genes", "LogFold");
 }
 
 #=============================================================================================================
@@ -747,17 +748,21 @@ if(! file.exists(outdir))
 #===============================================================================
 # Write initial data summary in html outfile
 #===============================================================================
-    cat("<html><head></head><body>\n", file = htmloutfile);
-    
-    cat("<h1><u>QuanTP: Association between abundance ratios of transcript and protein</u></h1><hr/>\n",
+lines <- getPlotlyLines('Box_TE_all_rep')
+
+cat("<html><head>",
+    lines$prescripts,
+    "</head><body>\n", file = htmloutfile);
+
+cat("<h1><u>QuanTP: Association between abundance ratios of transcript and protein</u></h1><hr/>\n",
     "<font><h3>Input data summary</h3></font>\n",
     "<ul>\n",
     "<li>Abbreviations used: PE (Proteome data) and TE (Transcriptome data)","</li><br>\n",
     "<li>Input Proteome data dimension (Row Column): ", dim(PE_df)[1]," x ", dim(PE_df)[2],"</li>\n",
     "<li>Input Transcriptome data dimension (Row Column): ", dim(TE_df)[1]," x ", dim(TE_df)[2],"</li></ul><hr/>\n",
     file = htmloutfile, append = TRUE);
-    
-    cat("<h3 id=table_of_content>Table of Contents:</h3>\n",
+
+cat("<h3 id=table_of_content>Table of Contents:</h3>\n",
     "<ul>\n",
     "<li><a href=#sample_dist>Sample distribution</a></li>\n",
     "<li><a href=#corr_data>Correlation</a></li>\n",
@@ -815,20 +820,19 @@ PE_nacount = sum(is.na(PE_df));
 TE_df[is.na(TE_df)] = 0;
 PE_df[is.na(PE_df)] = 0;
 
-
 #===============================================================================
 # Decide based on analysis mode
 #===============================================================================
 if(mode=="logfold")
 {
   cat('<h2 id="sample_dist"><font color=#ff0000>SAMPLE DISTRIBUTION</font></h2>\n',
-  file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   # TE Boxplot
   outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
-  '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-  "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
+      '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+      "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
   multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
   
   # PE Boxplot
@@ -837,7 +841,7 @@ if(mode=="logfold")
   multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Samples", "Protein Abundance data");
   
   cat('<hr/><h2 id="corr_data"><font color=#ff0000>CORRELATION</font></h2>\n',
-  file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   # TE PE scatter
   outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
@@ -851,18 +855,18 @@ if(mode=="logfold")
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);
   singlesample_cor(PE_TE_data, htmloutfile, append=TRUE);
   cat('<font color="red">*Note that <u>correlation</u> is <u>sensitive to outliers</u> in the data. So it is important to analyze outliers/influential observations in the data.<br> Below we use <u>Cook\'s distance based approach</u> to identify such influential observations.</font>\n',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   cat('</td></table>',
-    file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   cat('<hr/><h2 id="regression_data"><font color=#ff0000>REGRESSION ANALYSIS</font></h2>\n',
-  file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   # TE PE Regression
   singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
   
   cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
-  file = htmloutfile, append = TRUE);
+      file = htmloutfile, append = TRUE);
   
   # TE PE Heatmap
   singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
@@ -875,13 +879,16 @@ if(mode=="logfold")
   if(mode=="multiple")
   {
     cat('<h2 id="sample_dist"><font color=#ff0000>SAMPLE DISTRIBUTION</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_all_rep.png",sep="",collape="");
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
-    '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="Box_TE_all_rep.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
+        '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+        "<tr><td align=center>", 
+        '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
+        lines$plotly_div, '\n', 
+        file = htmloutfile, append = TRUE);
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
@@ -896,7 +903,7 @@ if(mode=="logfold")
     # Calc TE PCA
     outplot = paste(outdir,"/PCA_TE_all_rep.png",sep="",collape="");
     multisample_PCA(TE_df, sampleinfo_df, outplot);
-
+    
     # Calc PE PCA
     outplot = paste(outdir,"/PCA_PE_all_rep.png",sep="",collape="");
     multisample_PCA(PE_df, sampleinfo_df, outplot);
@@ -912,50 +919,50 @@ if(mode=="logfold")
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_rep.png",sep="",collape="");
     cat('<br><font color="#ff0000"><h3>Sample wise distribution (Box plot) after using ',method,' on replicates </h3></font><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Transcript Abundance (log)");
-
+    
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_rep.png",sep="",collape="");
     cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Protein Abundance (log)");
-
+    
     #===============================================================================
     # Calculating log fold change and running the "single" code part 
     #===============================================================================
-
+    
     TE_df = data.frame("Genes"=TE_df[,1], "LogFold"=apply(TE_df[,c(which(colnames(TE_df)==condition_g_name),which(colnames(TE_df)==control_g_name))],1,function(x) log(x[1]/x[2],base=2)));
     PE_df = data.frame("Genes"=PE_df[,1], "LogFold"=apply(PE_df[,c(which(colnames(PE_df)==condition_g_name),which(colnames(PE_df)==control_g_name))],1,function(x) log(x[1]/x[2],base=2)));
-  
-      #===============================================================================
-      # Treat missing values
-      #===============================================================================
-  
-      TE_df[is.infinite(TE_df[,2]),2] = NA;
-      PE_df[is.infinite(PE_df[,2]),2] = NA;
-      TE_df[is.na(TE_df)] = 0;
-      PE_df[is.na(PE_df)] = 0;
-
-      sampleinfo_df = data.frame("Sample"= c("LogFold"), "Group"=c("Fold_Change"))
-      #===============================================================================
-      # Find common samples
-      #===============================================================================
-  
-      common_samples = intersect(sampleinfo_df[,1], colnames(TE_df)[-1]) %>% intersect(., colnames(PE_df)[-1]);
-      TE_df =  select(TE_df, 1, common_samples);
-      PE_df =  select(PE_df, 1, common_samples);
-      sampleinfo_df = filter(sampleinfo_df, Sample %in% common_samples);
-      rownames(sampleinfo_df) = sampleinfo_df[,1];
-  
+    
+    #===============================================================================
+    # Treat missing values
+    #===============================================================================
+    
+    TE_df[is.infinite(TE_df[,2]),2] = NA;
+    PE_df[is.infinite(PE_df[,2]),2] = NA;
+    TE_df[is.na(TE_df)] = 0;
+    PE_df[is.na(PE_df)] = 0;
+    
+    sampleinfo_df = data.frame("Sample"= c("LogFold"), "Group"=c("Fold_Change"))
+    #===============================================================================
+    # Find common samples
+    #===============================================================================
+    
+    common_samples = intersect(sampleinfo_df[,1], colnames(TE_df)[-1]) %>% intersect(., colnames(PE_df)[-1]);
+    TE_df =  select(TE_df, 1, common_samples);
+    PE_df =  select(PE_df, 1, common_samples);
+    sampleinfo_df = filter(sampleinfo_df, Sample %in% common_samples);
+    rownames(sampleinfo_df) = sampleinfo_df[,1];
+    
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
     cat('<br><font color="#ff0000"><h3>Distribution (Box plot) of log fold change </h3></font>', file = htmloutfile, append = TRUE);
     cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
     multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
     
     # PE Boxplot
@@ -972,14 +979,14 @@ if(mode=="logfold")
     # Print PCA
     
     cat('<br><br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>PCA plot: Transcriptome data</font></th><th><font color=#ffcc33>PCA plot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500></td>\n',
-    "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500></td></tr></table>\n', 
-      file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500></td>\n',
+        "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500></td></tr></table>\n', 
+        file = htmloutfile, append = TRUE);
     
     
     
     cat('<hr/><h2 id="corr_data"><font color=#ff0000>CORRELATION</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     
     # TE PE scatter
     outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
@@ -988,23 +995,23 @@ if(mode=="logfold")
     PE_TE_data = data.frame(PE_df, TE_df);
     colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
     singlesample_scatter(PE_TE_data, outplot);  
-
+    
     # TE PE Cor
     cat("<tr><td align=center>\n", file = htmloutfile, append = TRUE);
     singlesample_cor(PE_TE_data, htmloutfile, append=TRUE);
     cat('<font color="red">*Note that <u>correlation</u> is <u>sensitive to outliers</u> in the data. So it is important to analyze outliers/influential observations in the data.<br> Below we use <u>Cook\'s distance based approach</u> to identify such influential observations.</font>\n',
-      file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     cat('</td></table>',
-    file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     
     cat('<hr/><h2 id="regression_data"><font color=#ff0000>REGRESSION ANALYSIS</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     
     # TE PE Regression
     singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
     
     cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
-    file = htmloutfile, append = TRUE);
+        file = htmloutfile, append = TRUE);
     
     #TE PE Heatmap
     singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
@@ -1021,6 +1028,8 @@ cat("<h3>Go To:</h3>\n",
     "<li><a href=#regression_data>Regression analysis</a></li>\n",
     "<li><a href=#inf_obs>Influential observations</a></li>\n",
     "<li><a href=#cluster_data>Cluster analysis</a></li></ul>\n",
-    "<br><a href=#>TOP</a>",
+    "<br><a href=#>TOP</a>\n",
     file = htmloutfile, append = TRUE);
-cat("</body></html>\n", file = htmloutfile, append = TRUE);
+
+cat(lines$postscript, "\n",
+    "</body></html>\n", file = htmloutfile, append = TRUE);
