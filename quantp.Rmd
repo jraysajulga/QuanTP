@@ -1101,9 +1101,9 @@ getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
   'prescripts'  = paste('<!--',
-                          stringi::stri_reverse(gsub('script', 'placeholder',
+                          rev(stringi::stri_reverse(gsub('script', 'script',
                                                lines[grep('<script>',lines)[1]
-                                                     :grep('</head>' ,lines)[1] - 1])),
+                                                     :grep('</head>' ,lines)[1] - 1]))),
                           '-->'),
   #'prescripts' = paste('',
   #                      gsub('script', 'script',
@@ -1121,6 +1121,7 @@ getPlotlyLines = function(name){
 }
 test <- getPlotlyLines('Box_TE_all_rep')
 print(test$prescripts[1:10])
+print(readLines(paste(outdir,'/','Box_TE_all_rep','.html', sep="")))
 ```
 
 #name <- 'Box_TE_all_rep'
@@ -1138,6 +1139,21 @@ cat(paste(prescripts, collapse='\n'), file='test.txt')
 htmllines <- readLines(htmloutfile)
 htmllines[1] <- paste('<html>\n<head>\n', paste(prescripts, collapse='\n'), '</head>\n<body>')
 htmllines[1:15]
+
+
+
+
+```
+
+
+```{r}
+string <- ('>eltit/<yltolp>eltit<
+{ )(noitcnuf(>redlohecalp<
+a etaerc esiwrehto ;ti esu neht ,denifed ydaerla si stegdiWLMTH.wodniw fI //  
+eht tceffa taht snoitpo tes ot edoc gnidecerp swolla sihT .tcejbo wen //  
+.)tsixe yltnerruc enon hguoht( ssecorp noitazilaitini //  
+;}{ || stegdiWLMTH.wodniw = stegdiWLMTH.wodniw')
+stringi::stri_reverse(string)
 ```
 
 #htmllines <- readLines(htmloutfile)
