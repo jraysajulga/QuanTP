@@ -618,7 +618,9 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                type ="box") %>%
       layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
   #outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p), paste(getwd(), '/', gsub("\\.png", "\\.html", outfile), sep=""), selfcontained = TRUE)
+  htmlwidgets::saveWidget(as_widget(p), 
+                          file.path(paste(getwd(), '/', gsub("\\.png", "\\.html", outfile), sep="")),
+                          selfcontained = TRUE)
   plot(g);
   dev.off();
 }

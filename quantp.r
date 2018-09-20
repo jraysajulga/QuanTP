@@ -435,10 +435,26 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                colors = c("#F35E5A","#18B3B7"),
                type ="box") %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  #outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p), paste(getwd(), '/', gsub("\\.png", "\\.html", outfile), sep=""), selfcontained = TRUE)
+  
+  #htmlwidgets::saveWidget(as_widget(p), 
+  #                       file.path(gsub("\\.png", "\\.html", outfile)),
+  #                        selfcontained = TRUE)
+  saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outfile)))
   plot(g);
   dev.off();
+}
+
+
+## A wrapper to saveWidget which compensates for arguable BUG in
+## saveWidget which requires `file` to be in current working
+## directory.
+saveWidgetFix <- function (widget,file,...) {
+  wd<-getwd()
+  on.exit(setwd(wd))
+  outDir<-dirname(file)
+  file<-basename(file)
+  setwd(outDir);
+  htmlwidgets::saveWidget(widget,file=file,selfcontained = TRUE)
 }
 
 #===============================================================================
@@ -799,7 +815,7 @@ PE_df[is.na(PE_df)] = 0;
 # Obtain JS/HTML lines for interactive visualization through Plot.ly
 #===============================================================================
 getPlotlyLines = function(name){
-  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
     'prescripts'  = paste('<!--',
                           gsub('script', 'placeholder',
