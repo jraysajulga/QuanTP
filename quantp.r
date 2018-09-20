@@ -412,6 +412,7 @@ singlesample_cor = function(PE_TE_data, htmloutfile, append=TRUE)
   
 }
 
+
 #===============================================================================
 # Boxplot
 #===============================================================================
@@ -434,10 +435,8 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                colors = c("#F35E5A","#18B3B7"),
                type ="box") %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  outfile <- paste(gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p),
-                          file.path(normalizePath(dirname(outfile)),basename(outfile)),
-                          selfcontained = FALSE)
+  #outfile <- paste(getwd(),'/', gsub("\\.png", "\\.html", outfile), sep="")
+  htmlwidgets::saveWidget(as_widget(p), paste(getwd(), '/', gsub("\\.png", "\\.html", outfile), sep=""), selfcontained = TRUE)
   plot(g);
   dev.off();
 }
@@ -615,7 +614,6 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 
 
 
-
 #===============================================================================
 # Arguments
 #===============================================================================
@@ -724,44 +722,11 @@ if(! file.exists(outdir))
 {
   dir.create(outdir);
 }
-
-
-#===============================================================================
-# Obtain JS/HTML for interactive visualization through Plot.ly
-#===============================================================================
-
-getPlotlyLines = function(name){
-  print(paste(outdir,'/',name,'.png', sep=""))
-  print(paste(outdir,"/Box_TE.png",sep="",collape=""));
-  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
-  return(list(
-    'prescripts'  = paste('<!--',
-                          gsub('script', 'placeholder',
-                               lines[grep(lines, pattern='<script src')]),
-                          '-->'),
-    'plotly_div'  = paste('<!--',
-                          gsub('width:100%;height:400px',
-                               'width:500px;height:500px',
-                               lines[grep(lines, pattern='plotly html-widget')]),
-                          '-->'),
-    'postscripts' = paste('<!--',
-                          gsub('script', 'placeholder',
-                               lines[grep(lines, pattern='<script type')]),
-                          '-->')));
-}
-
-
-
-
 #===============================================================================
 # Write initial data summary in html outfile
 #===============================================================================
-#lines <- getPlotlyLines('Box_TE_all_rep')
 
-
-cat("<html><head>",
-    lines$prescripts,
-    "</head><body>\n", file = htmloutfile);
+cat("<html><head></head><body>\n", file = htmloutfile);
 
 cat("<h1><u>QuanTP: Association between abundance ratios of transcript and protein</u></h1><hr/>\n",
     "<font><h3>Input data summary</h3></font>\n",
@@ -779,6 +744,7 @@ cat("<h3 id=table_of_content>Table of Contents:</h3>\n",
     "<li><a href=#inf_obs>Influential observations</a></li>\n",
     "<li><a href=#cluster_data>Cluster analysis</a></li></ul><hr/>\n",
     file = htmloutfile, append = TRUE);
+
 #===============================================================================
 # Find common samples
 #===============================================================================
@@ -828,6 +794,29 @@ PE_nacount = sum(is.na(PE_df));
 
 TE_df[is.na(TE_df)] = 0;
 PE_df[is.na(PE_df)] = 0;
+
+#===============================================================================
+# Obtain JS/HTML lines for interactive visualization through Plot.ly
+#===============================================================================
+getPlotlyLines = function(name){
+  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  return(list(
+    'prescripts'  = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script src')]),
+                          '-->', sep=''),
+    'plotly_div'  = paste('<!--',
+                          gsub('width:100%;height:400px',
+                               'width:500px;height:500px',
+                               lines[grep(lines, pattern='plotly html-widget')]),
+                          '-->', sep=''),
+    'postscripts' = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script type')]),
+                          '-->', sep='')));
+}
+prescripts <- list()
+postscripts <- list()
 
 #===============================================================================
 # Decide based on analysis mode
@@ -892,6 +881,9 @@ if(mode=="logfold")
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_all_rep.png",sep="",collape="");
+    lines <- getPlotlyLines('Box_TE_all_rep')
+    prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
         '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
         "<tr><td align=center>", 
@@ -903,7 +895,7 @@ if(mode=="logfold")
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
     
     # PE Boxplot
-    outplot = paste(outdir,"/Box_PE_all_rep.png",sep="");
+    outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
     cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
@@ -1040,5 +1032,13 @@ cat("<h3>Go To:</h3>\n",
     "<br><a href=#>TOP</a>\n",
     file = htmloutfile, append = TRUE);
 
-cat(lines$postscript, "\n",
-    "</body></html>\n", file = htmloutfile, append = TRUE);
+
+#===============================================================================
+# Add masked-javascripts tags to HTML file in the head and end
+#===============================================================================
+
+htmllines <- readLines(htmloutfile)
+htmllines[1] <- paste('<html>\n<head>\n', paste(prescripts, collapse='\n'), '\n</head>\n<body>')
+cat(paste(htmllines, collapse='\n'), file = htmloutfile)
+cat('\n', lines$postscript, "\n",
+    "</body>\n</html>\n", file = htmloutfile, append = TRUE);

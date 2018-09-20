@@ -660,13 +660,6 @@ volc_with = args[10];
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
 
-
-#
-# Set up Plotly API authentication
-#
-Sys.setenv("plotly_username"="galaxyp")
-Sys.setenv("plotly_api_key"="L1gyrR7gtvy0vw4jlydq")
-
 #===============================================================================
 # Check for file existance
 #===============================================================================
