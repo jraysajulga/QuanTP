@@ -606,6 +606,28 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 
 }
 
+#===============================================================================
+# Obtain JS/HTML for interactive visualization through Plot.ly
+#===============================================================================
+
+getPlotlyLines = function(name){
+  lines <- readLines(paste(outdir,name,'.html', sep=""))
+  return(list(
+    'prescripts'  = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script src')]),
+                          '-->'),
+    'plotly_div'  = paste('<!--',
+                          gsub('width:100%;height:400px',
+                               'width:500px;height:500px',
+                               lines[grep(lines, pattern='plotly html-widget')]),
+                          '-->'),
+    'postscripts' = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script type')]),
+                          '-->')));
+}
+
 
 #***************************************************************************************************************************************
 # Functions: End
