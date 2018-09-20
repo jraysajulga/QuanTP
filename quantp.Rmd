@@ -8,7 +8,6 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
-
 #***************************************************************************************************************************************
 # Functions: Start
 #***************************************************************************************************************************************
@@ -596,18 +595,10 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 
 ```
 
-```{r}
-hello <- outplot
-hello %<>%
-  gsub("//", "-",.) %>%
-  gsub("\\.png", "",.)
-hello
-```
-
 # OMEGA
 #multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
 ``` {r}
-
+library(plotly)
 #===============================================================================
 # Boxplot
 #===============================================================================
@@ -1049,37 +1040,41 @@ cat("</body></html>\n", file = htmloutfile, append = TRUE);
 
 
 #===============================================================================
-# Create JS outfile HTML
+# Insert JS lines into output HRML
 #===============================================================================
-jshtmloutfile <- 'test-jsoutput.html'
-file.copy(htmloutfile, jshtmloutfile)
 #tx <- readLines(htmloutfile)
 #tx2 <- gsub(pattern = "img", replace = "iframe", x = tx)
 #tx3 <- gsub(pattern = 'png" width=500 height=500>', replace = 'html" width=500 height=500></iframe>', x = tx2)
 #writeLines(tx3, con="test-files/test-jsoutput.html")
 ```
 
-
 ```{r}
-lines <- readLines('test-files//Box_TE_rep.html')
-```
+getPlotlyLines = function(name){
+  print(paste(outdir,name,'\\.html', sep=""));
+  #lines <- readLines(paste(outdir,name,'\\.html'))
+  print(lines)
+}
 
-```{r}
-typeof(lines)
-#script <- filter(lines, 'script' %in% )
-#script
-scripts <- lapply(lines, grep, pattern="<script src", value=TRUE)
-javascripts <- lapply(lines, grep, pattern="<script type", value=TRUE)
-divs <- lapply(lines, grep, pattern="<div id", value=TRUE)
-divs
-
+getPlotlyLines('Box_PE_rep');
 ```
 
 
+#htmllines <- readLines(htmloutfile)
+#writeLines(htmllines, con="test.txt")
+#htmllines[grepl(htmllines, pattern = 'img')] = 'replaced'
+#htmllines
 
-```{r}
-library(htmlwidgets)
-library(plotly)
-```
+#lines <- readLines(paste(outdir,'Box_TE_rep.html', sep=""))
+#scripts <- lapply(lines, grep, pattern="<script src", value=TRUE)
+#htmloutput <- gsub('script','placeholder',scripts)
+#htmloutput
+#print(htmloutput[lapply(htmloutput,length)>0])
+#writeLines(htmloutput, con="test.txt")
+
+#name <- 'Box_TE_rep'
+#scripts <- lapply(lines, grep, pattern="<script src", value=TRUE)
+#javascripts <- lapply(lines, grep, pattern="<script type", value=TRUE)
+#divs <- data.frame(lapply(lines, grep, pattern="plotly html-widget", value=TRUE))
+#row.names(divs) <- name
 
 
