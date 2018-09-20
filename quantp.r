@@ -757,7 +757,7 @@ getPlotlyLines = function(name){
 # Write initial data summary in html outfile
 #===============================================================================
 #lines <- getPlotlyLines('Box_TE_all_rep')
-lines <- list('prescripts' = 'yo','plotly_div' = 'yo','postscripts' = 'yo')
+
 
 cat("<html><head>",
     lines$prescripts,
