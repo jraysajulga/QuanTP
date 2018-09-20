@@ -434,8 +434,10 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                colors = c("#F35E5A","#18B3B7"),
                type ="box") %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  outfile <- paste('/', gsub("\\.png", "\\.html", outfile), sep="")
-  htmlwidgets::saveWidget(as_widget(p), gsub("\\.png", "\\.html", outfile), selfcontained = FALSE)
+  outfile <- paste(gsub("\\.png", "\\.html", outfile), sep="")
+  htmlwidgets::saveWidget(as_widget(p),
+                          file.path(normalizePath(dirname(outfile)),basename(outfile)),
+                          selfcontained = FALSE)
   plot(g);
   dev.off();
 }
@@ -606,29 +608,6 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 
 }
 
-#===============================================================================
-# Obtain JS/HTML for interactive visualization through Plot.ly
-#===============================================================================
-
-getPlotlyLines = function(name){
-  print(paste(outdir,name,'.html',sep=""))
-  lines <- readLines(paste(outdir,name,'.html', sep=""))
-  return(list(
-    'prescripts'  = paste('<!--',
-                          gsub('script', 'placeholder',
-                               lines[grep(lines, pattern='<script src')]),
-                          '-->'),
-    'plotly_div'  = paste('<!--',
-                          gsub('width:100%;height:400px',
-                               'width:500px;height:500px',
-                               lines[grep(lines, pattern='plotly html-widget')]),
-                          '-->'),
-    'postscripts' = paste('<!--',
-                          gsub('script', 'placeholder',
-                               lines[grep(lines, pattern='<script type')]),
-                          '-->')));
-}
-
 
 #***************************************************************************************************************************************
 # Functions: End
@@ -683,7 +662,7 @@ suppressPackageStartupMessages(library(data.table));
 suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
 suppressPackageStartupMessages(library(ggfortify));
-#suppressPackageStartupMessages(library(plotly));
+suppressPackageStartupMessages(library(plotly));
 
 #===============================================================================
 # Select mode and parse experiment design file
@@ -745,10 +724,40 @@ if(! file.exists(outdir))
 {
   dir.create(outdir);
 }
+
+
+#===============================================================================
+# Obtain JS/HTML for interactive visualization through Plot.ly
+#===============================================================================
+
+getPlotlyLines = function(name){
+  print(paste(outdir,'/',name,'.png', sep=""))
+  print(paste(outdir,"/Box_TE.png",sep="",collape=""));
+  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
+  return(list(
+    'prescripts'  = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script src')]),
+                          '-->'),
+    'plotly_div'  = paste('<!--',
+                          gsub('width:100%;height:400px',
+                               'width:500px;height:500px',
+                               lines[grep(lines, pattern='plotly html-widget')]),
+                          '-->'),
+    'postscripts' = paste('<!--',
+                          gsub('script', 'placeholder',
+                               lines[grep(lines, pattern='<script type')]),
+                          '-->')));
+}
+
+
+
+
 #===============================================================================
 # Write initial data summary in html outfile
 #===============================================================================
-lines <- getPlotlyLines('Box_TE_all_rep')
+#lines <- getPlotlyLines('Box_TE_all_rep')
+lines <- list('prescripts' = 'yo','plotly_div' = 'yo','postscripts' = 'yo')
 
 cat("<html><head>",
     lines$prescripts,
@@ -894,7 +903,7 @@ if(mode=="logfold")
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
     
     # PE Boxplot
-    outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
+    outplot = paste(outdir,"/Box_PE_all_rep.png",sep="");
     cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
