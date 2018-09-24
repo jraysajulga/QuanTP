@@ -454,7 +454,7 @@ saveWidgetFix <- function (widget,file,...) {
   outDir<-dirname(file)
   file<-basename(file)
   setwd(outDir);
-  htmlwidgets::saveWidget(widget,file=file,selfcontained = TRUE)
+  htmlwidgets::saveWidget(widget,file=file,selfcontained = FALSE)
 }
 
 #===============================================================================
@@ -817,11 +817,16 @@ PE_df[is.na(PE_df)] = 0;
 getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
-    'prescripts'  = c('<!--',
-                          rev(stringi::stri_reverse(gsub('script', 'script',
-                                                         lines[grep('<script>',lines)[1]
-                                                               :grep('</head>' ,lines)[1] - 1]))),
-                          '-->'),
+    'prescripts'  = c('',
+                      gsub('script', 'script',
+                           lines[grep('<head>',lines) + 3
+                                 :grep('</head>' ,lines) - 5]),
+                      ''),
+    #'prescripts'  = c('<!--',
+    #                      rev(stringi::stri_reverse(gsub('script', 'script',
+    #                                                     lines[grep('<meta>',lines)[1] + 1
+    #                                                           :grep('</head>' ,lines)[1] - 1]))),
+    #                      '-->'),
     #'prescripts' = paste('',
     #                      gsub('script', 'script',
     #                           lines[grep(lines, pattern='<script src')]),

@@ -1100,28 +1100,33 @@ outdir <- 'test-files/'
 getPlotlyLines = function(name){
   lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
   return(list(
-  'prescripts'  = paste('<!--',
-                          rev(stringi::stri_reverse(gsub('script', 'script',
-                                               lines[grep('<script>',lines)[1]
-                                                     :grep('</head>' ,lines)[1] - 1]))),
-                          '-->'),
-  #'prescripts' = paste('',
-  #                      gsub('script', 'script',
-  #                           lines[grep(lines, pattern='<script src')]),
-  #                      '', sep=''),
-  'plotly_div'  = paste('<!--',
-                        gsub('width:100%;height:400px',
-                             'width:500px;height:500px',
-                             lines[grep(lines, pattern='plotly html-widget')]),
-                        '-->', sep=''),
-  'postscripts' = paste('',
-                        gsub('script', 'script',
-                             lines[grep(lines, pattern='<script type')]),
-                        '', sep='')));
+    'prescripts'  = c('',
+                          gsub('script', 'script',
+                              lines[grep('<head>',lines) + 3  
+                                   :grep('</head>' ,lines) - 5]),
+                          ''),
+    #'prescripts'  = c('<!--',
+    #                      rev(stringi::stri_reverse(gsub('script', 'script',
+    #                                                     lines[grep('<meta>',lines)[1] + 1
+    #                                                           :grep('</head>' ,lines)[1] - 1]))),
+    #                      '-->'),
+    #'prescripts' = paste('',
+    #                      gsub('script', 'script',
+    #                           lines[grep(lines, pattern='<script src')]),
+    #                      '', sep=''),
+    'plotly_div'  = paste('<!--',
+                          gsub('width:100%;height:400px',
+                               'width:500px;height:500px',
+                               lines[grep(lines, pattern='plotly html-widget')]),
+                          '-->', sep=''),
+    'postscripts' = paste('',
+                          gsub('script', 'script',
+                               lines[grep(lines, pattern='<script type')]),
+                          '', sep='')));
 }
 test <- getPlotlyLines('Box_TE_all_rep')
-print(test$prescripts[1:10])
-print(readLines(paste(outdir,'/','Box_TE_all_rep','.html', sep="")))
+print(test$prescripts)
+#print(readLines(paste(outdir,'/','Box_TE_all_rep','.html', sep="")))
 ```
 
 #name <- 'Box_TE_all_rep'
@@ -1154,6 +1159,12 @@ eht tceffa taht snoitpo tes ot edoc gnidecerp swolla sihT .tcejbo wen //
 .)tsixe yltnerruc enon hguoht( ssecorp noitazilaitini //  
 ;}{ || stegdiWLMTH.wodniw = stegdiWLMTH.wodniw')
 stringi::stri_reverse(string)
+```
+
+
+```{r}
+yo <- paste(c('asdf','funny'), collapse='yo')
+yo
 ```
 
 #htmllines <- readLines(htmloutfile)
