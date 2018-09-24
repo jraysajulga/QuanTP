@@ -916,8 +916,8 @@ if(mode=="logfold")
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
         '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
         "<tr><td align=center>", 
-        '<img src="Box_TE_all_rep.png" width=500 height=500></td>',
-        lines$plotly_div, '\n', 
+        '<img src="Box_TE_all_rep.png" width=500 height=500>\n',
+        lines$plotly_div,'</td>',
         file = htmloutfile, append = TRUE);
     
     # PE Boxplot
