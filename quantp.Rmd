@@ -428,7 +428,9 @@ singlesample_cor = function(PE_TE_data, htmloutfile, append=TRUE)
 #===============================================================================
 multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, user_ylab)
 {
+  print(df)
   tempdf = df[,-1, drop=FALSE];
+  rownames(tempdf) = df$Gene;
   tempdf = t(tempdf) %>% as.data.frame();
   tempdf[is.na(tempdf)] = 0;
   tempdf$Sample = rownames(tempdf);
@@ -439,16 +441,17 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   if(fill_leg=="No"){
     tempdf1$Group = c("case", "control")
   }
+
   g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
   p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
                color = tempdf1$Group,
                colors = c("#F35E5A","#18B3B7"),
-               type ="box") %>%
+               type ="box",
+               hoverinfo = 'text',
+               text = ~paste('Gene: ', tempdf1$variable,
+                             '<br />Value: ', tempdf1$value)) %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
   
-  #htmlwidgets::saveWidget(as_widget(p), 
-  #                       file.path(gsub("\\.png", "\\.html", outfile)),
-  #                        selfcontained = TRUE)
   saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outfile)))
   plot(g);
   dev.off();
@@ -639,16 +642,29 @@ perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfo
 #***************************************************************************************************************************************
 
 
-
 #===============================================================================
 # Arguments
 #===============================================================================
-noargs = 12;
-args = commandArgs(trailingOnly = TRUE);
-if(length(args) != noargs)
-{
-  stop(paste("Please check usage. Number of arguments is not equal to ",noargs,sep="",collapse=""));
-}
+# noargs = 12;
+# args = commandArgs(trailingOnly = TRUE);
+# if(length(args) != noargs)
+# {
+#   stop(paste("Please check usage. Number of arguments is not equal to ",noargs,sep="",collapse=""));
+# }
+
+args <- c('multiple',
+'mean',
+'test-data/exp_design_file.tabular',
+'test-data/protein_data.tabular',
+'test-data/transcript_data.tabular',
+'BH',
+4,
+4,
+5,
+'pval',
+'test-files/output.html',
+'test-files/')
+
 
 mode = args[1]; # "multiple" or "logfold"
 method = args[2]; # "mean" or "median"
@@ -662,6 +678,8 @@ hm_nclust = args[9];
 volc_with = args[10];
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
+
+
 
 
 #===============================================================================
@@ -910,6 +928,7 @@ if(mode=="logfold")
   singlesample_kmeans(PE_TE_data, htmloutfile, nclust=as.numeric(numCluster))
   
 }else{
+
   if(mode=="multiple")
   {
     cat('<h2 id="sample_dist"><font color=#ff0000>SAMPLE DISTRIBUTION</font></h2>\n',
@@ -929,6 +948,8 @@ if(mode=="logfold")
         '<img src="Box_TE_all_rep.png" width=500 height=500>\n',
         lines$plotly_div,'</td>',
         file = htmloutfile, append = TRUE);
+  }
+}
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
@@ -1084,4 +1105,5 @@ cat('\n', lines$postscript, "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
 
 ```
+
 
