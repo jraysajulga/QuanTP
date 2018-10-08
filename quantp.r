@@ -922,10 +922,14 @@ if(mode=="logfold")
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
-    cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "Yes", "Samples", "Protein Abundance (log)");
+    lines <- getPlotlyLines('Box_PE_all_rep')
+    #prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
+    cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500>',
+          lines$plotly_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     # Calc TE PCA
     outplot = paste(outdir,"/PCA_TE_all_rep.png",sep="",collape="");
