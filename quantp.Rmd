@@ -428,7 +428,6 @@ singlesample_cor = function(PE_TE_data, htmloutfile, append=TRUE)
 #===============================================================================
 multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, user_ylab)
 {
-  print(df)
   tempdf = df[,-1, drop=FALSE];
   rownames(tempdf) = df$Gene;
   tempdf = t(tempdf) %>% as.data.frame();
