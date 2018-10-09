@@ -1072,5 +1072,5 @@ cat("<h3>Go To:</h3>\n",
 htmllines <- readLines(htmloutfile)
 htmllines[1] <- paste('<html>\n<head>\n', paste(prescripts, collapse='\n'), '\n</head>\n<body>')
 cat(paste(htmllines, collapse='\n'), file = htmloutfile)
-cat('\n', lines$postscript, "\n",
+cat('\n', postscripts, "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
