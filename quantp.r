@@ -445,6 +445,17 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   dev.off();
 }
 
+## A wrapper to saveWidget which compensates for arguable BUG in
+## saveWidget which requires `file` to be in current working
+## directory.
+saveWidgetFix <- function (widget,file,...) {
+  wd<-getwd()
+  on.exit(setwd(wd))
+  outDir<-dirname(file)
+  file<-basename(file)
+  setwd(outDir);
+  htmlwidgets::saveWidget(widget,file=file,selfcontained = FALSE)
+}
 
 #===============================================================================
 # Mean or Median of Replicates
@@ -644,6 +655,7 @@ volc_with = args[10];
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
 
+graph_mode = 'interactive';
 
 #===============================================================================
 # Check for file existance
@@ -811,20 +823,11 @@ getPlotlyLines = function(name){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    #'prescripts'  = c('<!--',
-    #                      rev(stringi::stri_reverse(gsub('script', 'script',
-    #                                                     lines[grep('<meta>',lines)[1] + 1
-    #                                                           :grep('</head>' ,lines)[1] - 1]))),
-    #                      '-->'),
-    #'prescripts' = paste('',
-    #                      gsub('script', 'script',
-    #                           lines[grep(lines, pattern='<script src')]),
-    #                      '', sep=''),
-    'plotly_div'  = paste('<!--',
+    'plotly_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='plotly html-widget')]),
-                          '-->', sep=''),
+                          '', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
@@ -905,10 +908,17 @@ if(mode=="logfold")
     postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
         '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", 
-        '<img src="Box_TE_all_rep.png" width=500 height=500>\n',
-        lines$plotly_div,'</td>',
-        file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", file = htmloutfile, append = TRUE);
+    if (graph_mode == 'interactive'){
+      cat(lines$plotly_div,'</td>',
+          file = htmloutfile, append = TRUE);
+    } else {
+      cat('<img src="Box_TE_all_rep.png" width=500 height=500>\n', 
+          '<!--', lines$plotly_div, '-->',
+          '</td>',
+          file = htmloutfile, append = TRUE);
+    }
+        
 
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
