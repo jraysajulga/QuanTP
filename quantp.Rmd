@@ -665,6 +665,7 @@ args <- c('multiple',
 'test-files/output.html',
 'test-files/')
 
+
 mode = args[1]; # "multiple" or "logfold"
 method = args[2]; # "mean" or "median"
 sampleinfo_file = args[3];
@@ -974,18 +975,24 @@ if(mode=="logfold")
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE_rep.png",sep="",collape="");
-    cat('<br><font color="#ff0000"><h3>Sample wise distribution (Box plot) after using ',method,' on replicates </h3></font><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Transcript Abundance (log)");
+    lines <- getPlotlyLines('Box_TE_rep')
+    #prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
+    cat('<br><font color="#ff0000"><h3>Sample wise distribution (Box plot) after using ',method,' on replicates </h3></font><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
+        "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500>', lines$plotly_div, '</td>\n', file = htmloutfile, append = TRUE);
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_rep.png",sep="",collape="");
-    cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Protein Abundance (log)");
+    lines <- getPlotlyLines('Box_PE_rep')
+    #prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
+    cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500>', lines$plotly_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     #===============================================================================
     # Calculating log fold change and running the "single" code part 
@@ -1016,15 +1023,21 @@ if(mode=="logfold")
     
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
+    multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
+    lines <- getPlotlyLines('Box_TE')
+    #prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Distribution (Box plot) of log fold change </h3></font>', file = htmloutfile, append = TRUE);
     cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
-    multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
+        "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500>', lines$plotly_div, '</td>\n', file = htmloutfile, append = TRUE);
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
-    cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
     multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Protein Abundance fold-change(log2)");
+    lines <- getPlotlyLines('Box_PE')
+    #prescripts <- c(prescripts, lines$prescripts)
+    postscripts <- c(postscripts, lines$postscripts)
+    cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$plotly_div,'</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     
     # Log Fold Data
