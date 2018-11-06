@@ -593,6 +593,49 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         plot(TE_df_logfold$LogFold, -log10(TE_pval),
              xlab="log2 fold change", ylab=volc_ylab,
              type="n")
+        
+        diff_df <- data.frame(
+          external_gene_name = TE_df_logfold$Genes,
+          Fold = TE_df_logfold$LogFold,
+          p_value = TE_pval)
+        
+        diff_df["group"] <- "NotSignificant"
+        # change the grouping for the entries with significance but not a large enough Fold change
+        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) < 1.5 ),"group"] <- "Significant"
+        
+        # change the grouping for the entries a large enough Fold change but not a low enough p value
+        diff_df[which(diff_df['p_value'] > 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "FoldChange"
+        
+        # change the grouping for the entries with both significance and large enough fold change
+        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "Significant&FoldChange"
+        
+        # Find and label the top peaks..
+        top_peaks <- diff_df[with(diff_df, order(~Fold, ~p_value)),][1:5,]
+        top_peaks <- rbind(top_peaks, diff_df[with(diff_df, order(~-Fold, ~p_value)),][1:5,])
+        
+        a <- list()
+        for (i in seq_len(nrow(top_peaks))) {
+          m <- top_peaks[i, ]
+          a[[i]] <- list(
+            x = m[["Fold"]],
+            y = -log10(m[["p_value"]]),
+            text = m[["external_gene_name"]],
+            xref = "x",
+            yref = "y",
+            showarrow = TRUE,
+            arrowhead = 0.5,
+            ax = 20,
+            ay = -40
+          )
+        }
+        
+        p <- plot_ly(data = diff_df, x = ~Fold, y = -log10(diff_df$p_value),
+                     text = ~external_gene_name, mode = "markers", color = ~group) %>% 
+          layout(title ="Volcano Plot") %>%
+          layout(annotations = a) %>%
+          layout(showlegend = FALSE)
+        saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+        
         sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
         points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
         #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
@@ -609,13 +652,17 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         abline(v = log(0.5,base=2), col="red", lty=2)
         dev.off();
 
-
-
+        lines <- getPlotlyLines('TE_volcano')
+        #postscripts <- c(postscripts, lines$postscripts)
         cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
             cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
             cat("<td align=center>",
-            '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
+            #'<img src="PE_volcano.png" width=600 height=600>',
+            lines$plotly_div,
+            '</td></tr></table><br>\n',
             file = htmloutfile, append = TRUE);
+        
+        
     }else{
         cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
         file = htmloutfile, append = TRUE);
@@ -1016,8 +1063,8 @@ if(mode=="logfold")
     
     # Log Fold Data
     perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-    
-    
+    lines <- getPlotlyLines('TE_volcano')
+    postscripts <- c(postscripts, lines$postscripts)
     
     # Print PCA
     
