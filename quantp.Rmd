@@ -225,12 +225,12 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
     png(outplot, width = 10, height = 10, units = 'in', res=300);
     # bitmap(outplot,"png16m");
-    PE_TE_data_no_outlier
     g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
     suppressMessages(plot(g));
     dev.off();
-    #p <- plot_ly(y = PE_TE_data_no_outlier$PE_abundance, y = PE_TE_data_no_outlier$TE_abundance)
-    #saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+    #p <- plot_ly(x = PE_TE_data_no_outlier$TE_abundance, y = PE_TE_data_no_outlier$PE_abundance)
+    p <- ggplotly(g)
+    saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
     # HELLO
     
     
@@ -1151,4 +1151,50 @@ cat('\n', paste(postscripts, collapse='\n'), "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
 
 ```
+
+
+
+```{r}
+#===============================================================================
+# Heatmap
+#===============================================================================
+library(d3heatmap)
+singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
+  cat('<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Heatmap of PE and TE abundance values (Hierarchical clustering)</font></th><th><font color=#ffcc33>Number of clusters to extract: ',hm_nclust,'</font></th></tr>\n',
+    file = htmloutfile, append = TRUE);
+  
+  hc=hclust(dist(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")])))
+  hm_cluster = cutree(hc,k=hm_nclust);
+  
+  outplot = paste(outdir,"/PE_TE_heatmap.png",sep="",collapse="");
+  png(outplot, width = 10, height = 10, units = 'in', res=300);
+  # bitmap(outplot, "png16m");
+  par(mfrow=c(1,1));
+  hmap = heatmap.2(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), trace="none", cexCol=1, col=greenred(100),Colv=F, labCol=c("Proteins","Transcripts"), scale="col", hclustfun = hclust, distfun = dist);
+  dev.off();
+  
+  p <- d3heatmap(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), scale = "col",
+                 colors = greenred(100),
+                 hclustfun = hclust,
+                 distfun = dist,
+                 show_grid = FALSE)
+  print(p)
+  saveWidgetFix(p, "test-files/test.html")
+  
+  cat('<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800></td></tr>\n',
+    file = htmloutfile, append = TRUE);
+  
+  
+  temp_PE_TE_data = data.frame(PE_TE_data$PE_ID, PE_TE_data$TE_abundance, PE_TE_data$PE_abundance, hm_cluster);
+  colnames(temp_PE_TE_data) = c("Gene", "Transcript abundance", "Protein abundance", "Cluster (Hierarchical clustering)")
+  tempoutfile = paste(outdir,"/PE_TE_hc_clusterpoints.txt",sep="",collapse="");
+  write.table(temp_PE_TE_data, file=tempoutfile, row.names=F, quote=F, sep="\t", eol="\n")
+  
+  
+  cat('<tr><td colspan="2" align=center><font size=5><a href="PE_TE_hc_clusterpoints.txt" target="_blank"><b>Download the hierarchical cluster list</b></a></font></td></tr></table>\n',
+    file = htmloutfile, append = TRUE);
+}
+singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
+```
+
 
