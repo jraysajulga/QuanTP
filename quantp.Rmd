@@ -225,9 +225,14 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
     png(outplot, width = 10, height = 10, units = 'in', res=300);
     # bitmap(outplot,"png16m");
+    PE_TE_data_no_outlier
     g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
     suppressMessages(plot(g));
     dev.off();
+    #p <- plot_ly(y = PE_TE_data_no_outlier$PE_abundance, y = PE_TE_data_no_outlier$TE_abundance)
+    #saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+    # HELLO
+    
     
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatterplot: Before removal</font></th><th><font color=#ffcc33>Scatterplot: After removal</font></th></tr>\n', file = htmloutfile, append = TRUE);
     # Before
@@ -446,6 +451,17 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   dev.off();
 }
 
+## A wrapper to saveWidget which compensates for arguable BUG in
+## saveWidget which requires `file` to be in current working
+## directory.
+saveWidgetFix <- function (widget,file,...) {
+  wd<-getwd()
+  on.exit(setwd(wd))
+  outDir<-dirname(file)
+  file<-basename(file)
+  setwd(outDir);
+  htmlwidgets::saveWidget(widget,file=file,selfcontained = FALSE)
+}
 
 #===============================================================================
 # Mean or Median of Replicates
@@ -583,6 +599,49 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         plot(TE_df_logfold$LogFold, -log10(TE_pval),
              xlab="log2 fold change", ylab=volc_ylab,
              type="n")
+        
+        diff_df <- data.frame(
+          external_gene_name = TE_df_logfold$Genes,
+          Fold = TE_df_logfold$LogFold,
+          p_value = TE_pval)
+        
+        diff_df["group"] <- "NotSignificant"
+        # change the grouping for the entries with significance but not a large enough Fold change
+        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) < 1.5 ),"group"] <- "Significant"
+        
+        # change the grouping for the entries a large enough Fold change but not a low enough p value
+        diff_df[which(diff_df['p_value'] > 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "FoldChange"
+        
+        # change the grouping for the entries with both significance and large enough fold change
+        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "Significant&FoldChange"
+        
+        # Find and label the top peaks..
+        top_peaks <- diff_df[with(diff_df, order(~Fold, ~p_value)),][1:5,]
+        top_peaks <- rbind(top_peaks, diff_df[with(diff_df, order(~-Fold, ~p_value)),][1:5,])
+        
+        a <- list()
+        for (i in seq_len(nrow(top_peaks))) {
+          m <- top_peaks[i, ]
+          a[[i]] <- list(
+            x = m[["Fold"]],
+            y = -log10(m[["p_value"]]),
+            text = m[["external_gene_name"]],
+            xref = "x",
+            yref = "y",
+            showarrow = TRUE,
+            arrowhead = 0.5,
+            ax = 20,
+            ay = -40
+          )
+        }
+        
+        p <- plot_ly(data = diff_df, x = ~Fold, y = -log10(diff_df$p_value),
+                     text = ~external_gene_name, mode = "markers", color = ~group) %>% 
+          layout(title ="Volcano Plot") %>%
+          layout(annotations = a) %>%
+          layout(showlegend = FALSE)
+        saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+        
         sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
         points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
         #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
@@ -599,13 +658,17 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         abline(v = log(0.5,base=2), col="red", lty=2)
         dev.off();
 
-
-
+        lines <- getPlotlyLines('TE_volcano')
+        #postscripts <- c(postscripts, lines$postscripts)
         cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
             cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
             cat("<td align=center>",
-            '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
+            #'<img src="PE_volcano.png" width=600 height=600>',
+            lines$plotly_div,
+            '</td></tr></table><br>\n',
             file = htmloutfile, append = TRUE);
+        
+        
     }else{
         cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
         file = htmloutfile, append = TRUE);
@@ -618,18 +681,6 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
 # Functions: End
 #***************************************************************************************************************************************
 
-
-
-
-#===============================================================================
-# Arguments
-#===============================================================================
-# noargs = 12;
-# args = commandArgs(trailingOnly = TRUE);
-# if(length(args) != noargs)
-# {
-#   stop(paste("Please check usage. Number of arguments is not equal to ",noargs,sep="",collapse=""));
-# }
 
 args <- c('multiple',
 'mean',
@@ -644,6 +695,15 @@ args <- c('multiple',
 'test-files/output.html',
 'test-files/')
 
+#===============================================================================
+# Arguments
+#===============================================================================
+noargs = 12;
+#args = commandArgs(trailingOnly = TRUE);
+if(length(args) != noargs)
+{
+  stop(paste("Please check usage. Number of arguments is not equal to ",noargs,sep="",collapse=""));
+}
 
 mode = args[1]; # "multiple" or "logfold"
 method = args[2]; # "mean" or "median"
@@ -659,6 +719,7 @@ volc_with = args[10];
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
 
+graph_mode = 'interactive';
 
 #===============================================================================
 # Check for file existance
@@ -826,20 +887,11 @@ getPlotlyLines = function(name){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    #'prescripts'  = c('<!--',
-    #                      rev(stringi::stri_reverse(gsub('script', 'script',
-    #                                                     lines[grep('<meta>',lines)[1] + 1
-    #                                                           :grep('</head>' ,lines)[1] - 1]))),
-    #                      '-->'),
-    #'prescripts' = paste('',
-    #                      gsub('script', 'script',
-    #                           lines[grep(lines, pattern='<script src')]),
-    #                      '', sep=''),
-    'plotly_div'  = paste('<!--',
+    'plotly_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='plotly html-widget')]),
-                          '-->', sep=''),
+                          '', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
@@ -920,10 +972,17 @@ if(mode=="logfold")
     postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
         '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", 
-        '<img src="Box_TE_all_rep.png" width=500 height=500>\n',
-        lines$plotly_div,'</td>',
-        file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", file = htmloutfile, append = TRUE);
+    if (graph_mode == 'interactive'){
+      cat(lines$plotly_div,'</td>',
+          file = htmloutfile, append = TRUE);
+    } else {
+      cat('<img src="Box_TE_all_rep.png" width=500 height=500>\n', 
+          '<!--', lines$plotly_div, '-->',
+          '</td>',
+          file = htmloutfile, append = TRUE);
+    }
+        
 
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
@@ -1020,192 +1079,9 @@ if(mode=="logfold")
     
     
     # Log Fold Data
-    #perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-    
-```
-
-```{r}
-#HELLO
-#===============================================================================
-# (T-Test or Wilcoxon ranksum test) and Volcano Plot
-#===============================================================================
-
-perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfold,sampleinfo_df, method, correction_method,volc_with)
-{
-
-PE_colnames = colnames(PE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  #PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-if(method=="median"){
-    PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-    # PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-PE_adj_pval = p.adjust(PE_pval, method = correction_method, n = length(PE_pval))
-
-
-TE_colnames = colnames(TE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-  if(method=="median"){
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-TE_adj_pval = p.adjust(TE_pval, method = correction_method, n = length(TE_pval))
-
-
-PE_TE_logfold_pval = data.frame(TE_df_logfold$Gene, TE_df_logfold$LogFold, TE_pval, TE_adj_pval, PE_df_logfold$LogFold, PE_pval, PE_adj_pval);
-colnames(PE_TE_logfold_pval) = c("Gene", "Transcript log fold-change", "p-value (transcript)", "adj p-value (transcript)", "Protein log fold-change", "p-value (protein)", "adj p-value (protein)");
-outdatafile = paste(outdir,"/PE_TE_logfold_pval.txt", sep="", collapse="");
-write.table(PE_TE_logfold_pval, file=outdatafile, row.names=F, sep="\t", quote=F);
-cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Download the complete fold change data here</a></b></font><br>\n",
-    file = htmloutfile, append = TRUE);
-
-    if(length(condition_ind)!=1)
-        {
-        # Volcano Plot
-
-        if(volc_with=="adj_pval")
-        {
-            PE_pval = PE_adj_pval
-            TE_pval = TE_adj_pval
-            volc_ylab = "-log10 Adjusted p-value";
-        }else{
-          if(volc_with=="pval")
-          {
-            volc_ylab = "-log10 p-value";
-          }
-        }
-        outplot = paste(outdir,"/PE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
-  
-        plot(PE_df_logfold$LogFold, -log10(PE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        
-        
-        sel <- which((PE_df_logfold$LogFold<=log(2,base=2))&(PE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="black")
-        #sel <- which((PE_df_logfold$LogFold>log(2,base=2))&(PE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="red")
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
-  
-
-
-        outplot = paste(outdir,"/TE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
-
-        plot(TE_df_logfold$LogFold, -log10(TE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        
-
-        diff_df <- data.frame(
-          external_gene_name = TE_df_logfold$Genes,
-          Fold = TE_df_logfold$LogFold,
-          p_value = TE_pval)
-        
-        diff_df["group"] <- "NotSignificant"
-        # change the grouping for the entries with significance but not a large enough Fold change
-        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) < 1.5 ),"group"] <- "Significant"
-
-        # change the grouping for the entries a large enough Fold change but not a low enough p value
-        diff_df[which(diff_df['p_value'] > 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "FoldChange"
-
-        # change the grouping for the entries with both significance and large enough fold change
-        diff_df[which(diff_df['p_value'] < 0.05 & abs(diff_df['Fold']) > 1.5 ),"group"] <- "Significant&FoldChange"
-        
-        # Find and label the top peaks..
-        top_peaks <- diff_df[with(diff_df, order(~Fold, ~p_value)),][1:5,]
-        top_peaks <- rbind(top_peaks, diff_df[with(diff_df, order(~-Fold, ~p_value)),][1:5,])
-                
-        a <- list()
-        for (i in seq_len(nrow(top_peaks))) {
-          m <- top_peaks[i, ]
-          a[[i]] <- list(
-          x = m[["Fold"]],
-          y = -log10(m[["p_value"]]),
-          text = m[["external_gene_name"]],
-          xref = "x",
-          yref = "y",
-          showarrow = TRUE,
-          arrowhead = 0.5,
-          ax = 20,
-          ay = -40
-          )
-        }
-        
-        p <- plot_ly(data = diff_df, x = ~Fold, y = -log10(diff_df$p_value),
-                     text = ~external_gene_name, mode = "markers", color = ~group) %>% 
-          layout(title ="Volcano Plot") %>%
-          layout(annotations = a)
-        saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
-        
-        
-        sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
-        #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="red")
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
-
-
-
-        cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
-            cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
-            cat("<td align=center>",
-            '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
-            file = htmloutfile, append = TRUE);
-    }else{
-        cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
-        file = htmloutfile, append = TRUE);
-    }
-
-}
-perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-```
-
-
-```{r}
-    
+    perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
+    lines <- getPlotlyLines('TE_volcano')
+    postscripts <- c(postscripts, lines$postscripts)
     
     # Print PCA
     
@@ -1273,141 +1149,6 @@ htmllines[1] <- paste('<html>\n<head>\n', paste(prescripts, collapse='\n'), '\n<
 cat(paste(htmllines, collapse='\n'), file = htmloutfile)
 cat('\n', paste(postscripts, collapse='\n'), "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
-```
-
-
-
-
-```{r}
-#===============================================================================
-# (T-Test or Wilcoxon ranksum test) and Volcano Plot
-#===============================================================================
-
-perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfold,sampleinfo_df, method, correction_method,volc_with)
-{
-
-PE_colnames = colnames(PE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(PE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  #PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-if(method=="median"){
-    PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-    # PE_pval = apply(PE_df_data[2:length(colnames(PE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-PE_adj_pval = p.adjust(PE_pval, method = correction_method, n = length(PE_pval))
-
-
-TE_colnames = colnames(TE_df_data);
-control_sample = sampleinfo_df[which(sampleinfo_df$Group=="control"),1];
-control_ind <<- sapply(control_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-condition_sample = sampleinfo_df[which(sampleinfo_df$Group=="case"),1];
-condition_ind <<- sapply(condition_sample, function(x){temp_ind = which(TE_colnames==x); as.numeric(temp_ind)});
-
-if(method=="mean"){
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) t.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(t.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-}else{
-  if(method=="median"){
-  TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) {obj<-try(wilcox.test(x[condition_ind-1], x[control_ind-1]),silent=TRUE); if(is(obj, "try-error")){return(NA)}else{return(obj$p.value)}})
-  # TE_pval = apply(TE_df_data[2:length(colnames(TE_df_data))],1,function(x) wilcox.test(x[condition_ind-1], x[control_ind-1])$p.value);
-  }
-}
-TE_adj_pval = p.adjust(TE_pval, method = correction_method, n = length(TE_pval))
-
-
-PE_TE_logfold_pval = data.frame(TE_df_logfold$Gene, TE_df_logfold$LogFold, TE_pval, TE_adj_pval, PE_df_logfold$LogFold, PE_pval, PE_adj_pval);
-colnames(PE_TE_logfold_pval) = c("Gene", "Transcript log fold-change", "p-value (transcript)", "adj p-value (transcript)", "Protein log fold-change", "p-value (protein)", "adj p-value (protein)");
-outdatafile = paste(outdir,"/PE_TE_logfold_pval.txt", sep="", collapse="");
-write.table(PE_TE_logfold_pval, file=outdatafile, row.names=F, sep="\t", quote=F);
-cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Download the complete fold change data here</a></b></font><br>\n",
-    file = htmloutfile, append = TRUE);
-
-    if(length(condition_ind)!=1)
-        {
-        # Volcano Plot
-
-        if(volc_with=="adj_pval")
-        {
-            PE_pval = PE_adj_pval
-            TE_pval = TE_adj_pval
-            volc_ylab = "-log10 Adjusted p-value";
-        }else{
-          if(volc_with=="pval")
-          {
-            volc_ylab = "-log10 p-value";
-          }
-        }
-        outplot = paste(outdir,"/PE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
-  
-        plot(PE_df_logfold$LogFold, -log10(PE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        sel <- which((PE_df_logfold$LogFold<=log(2,base=2))&(PE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="black")
-        #sel <- which((PE_df_logfold$LogFold>log(2,base=2))&(PE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="red")
-        sel <- which((PE_df_logfold$LogFold>log(2,base=2))|(PE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(PE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(PE_df_logfold[sel,"LogFold"], -log10(PE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
-  
-
-
-        outplot = paste(outdir,"/TE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
-          # bitmap(outplot, "png16m");
-          par(mfrow=c(1,1));
-
-        plot(TE_df_logfold$LogFold, -log10(TE_pval),
-             xlab="log2 fold change", ylab=volc_ylab,
-             type="n")
-        sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
-        #sel <- which((TE_df_logfold$LogFold>log(2,base=2))&(TE_df_logfold$LogFold<log(0.5,base=2))) # or whatever you want to use
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval<=0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="red")
-        sel <- which((TE_df_logfold$LogFold>log(2,base=2))|(TE_df_logfold$LogFold<log(0.5, base=2)))
-        sel1 <- which(TE_pval>0.05)
-        sel=intersect(sel,sel1)
-        points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="blue")
-        abline(h = -log(0.05,base=10), col="red", lty=2)
-        abline(v = log(2,base=2), col="red", lty=2)
-        abline(v = log(0.5,base=2), col="red", lty=2)
-        dev.off();
-
-
-
-        cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
-            cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
-            cat("<td align=center>",
-            '<img src="PE_volcano.png" width=600 height=600></td></tr></table><br>\n',
-            file = htmloutfile, append = TRUE);
-    }else{
-        cat('<br><br><b><font color=red>!!! No replicates found. Cannot perform test to check significance of differential expression. Thus, no Volcano plot generated !!!</font></b><br><br>',
-        file = htmloutfile, append = TRUE);
-    }
-
-}
-
 
 ```
 
