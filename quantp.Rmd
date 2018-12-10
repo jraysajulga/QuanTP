@@ -1173,6 +1173,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   hmap = heatmap.2(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), trace="none", cexCol=1, col=greenred(100),Colv=F, labCol=c("Proteins","Transcripts"), scale="col", hclustfun = hclust, distfun = dist);
   dev.off();
   
+  row.names(PE_TE_data) = PE_TE_data$PE_ID
   p <- d3heatmap(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), scale = "col",
                  colors = greenred(100),
                  hclustfun = hclust,
@@ -1194,6 +1195,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   cat('<tr><td colspan="2" align=center><font size=5><a href="PE_TE_hc_clusterpoints.txt" target="_blank"><b>Download the hierarchical cluster list</b></a></font></td></tr></table>\n',
     file = htmloutfile, append = TRUE);
 }
+
 singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
 ```
 
