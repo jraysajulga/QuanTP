@@ -59,13 +59,29 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   plot(regmodel, 1, cex.lab=1.5);
   dev.off();
   
+  #library(eeptools)
+  #library(autoplotly)
+  #print(ggplotly(autoplot(regmodel, data = PE_TE_data)[[1]]))
+  #plot_label(g, PE_TE_data$PE_ID)
+  #print(ggplotly(g[[1]]))
+  #print(ggplotly(autoplot(regmodel, label=TRUE)[[2]]))
+  #print(ggplotly(autoplot(regmodel, label=TRUE)[[4]]))
+  #print(autoplotly(regmodel))
+  
   # hello
   # regmodel = lm(PE_abundance~TE_abundance, data=PE_TE_data);
   # lm(formula = Sepal.Length ~ Petal.Width, data = iris)
-  g <- ggplot(PE_TE_data, aes(x = TE_abundance, y = PE_abundance)) + 
-    geom_point() +
-    stat_smooth(method = "lm", col = "red")
-  #saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
+  #g <- ggplot(PE_TE_data, aes(x = TE_abundance, y = PE_abundance)) +
+  #p1<-ggplot(regmodel, aes(.fitted, .resid))+geom_point()
+    #1<-p1+stat_smooth(method="loess")+geom_hline(yintercept=0, col="red", linetype="dashed")
+    #p1<-p1+xlab("Fitted values")+ylab("Residuals")
+   # p1<-p1+ggtitle("Residual vs Fitted Plot")+theme_bw()
+  #print(ggplotly(autoplot(regmodel)[[1]]))
+  #print(p1)
+  g <- autoplot(regmodel, data = PE_TE_data)[[1]] +
+    aes(label = PE_TE_data$PE_ID)
+  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
+  print(ggplotly)
   
   outplot = paste(outdir,"/PE_TE_lm_2.png",sep="",collapse="");
   png(outplot,width = 10, height = 10, units = 'in', res=300);
@@ -75,13 +91,11 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   ggplotly(g)
   dev.off();
   
-  #library(ggfortify)
-  #g <- autoplot(regmodel, 2)
-  #saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
-  
   #g <- ggplot(PE_TE_data, aes(sample = TE_abundance, y = PE_abundance)) + 
   #  stat_qq() +
   #  stat_qq_line()
+  #g <- ggplot(regmodel, aes(qqnorm(.stdresid)[[1]], .stdresid))+geom_point(na.rm = TRUE) +
+  #  geom_abline(aes(qqline(.stdresid)))
   #saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
   
   outplot = paste(outdir,"/PE_TE_lm_5.png",sep="",collapse="");
@@ -91,10 +105,12 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   plot(regmodel, 5, cex.lab=1.5);
   dev.off();
   
-  g <- ggplot(regmodel, aes(x = .hat, y = .stdresid)) + 
-    geom_point() +
-    stat_smooth(method = "loess", col = "red")
-  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
+  #p2<-ggplot(regmodel, aes(qqnorm(.stdresid)[[1]], .stdresid))+geom_point(na.rm = TRUE)
+  #  p2<-p2+geom_abline(aes(qqline(.stdresid)))+xlab("Theoretical Quantiles")+ylab("Standardized Residuals")
+  #  p2<-p2+ggtitle("Normal Q-Q")+theme_bw()
+  #saveWidgetFix(ggplotly(p2), file.path(gsub("\\.png", "\\.html", outplot)))
+  
+  #saveWidgetFix(ggplotly(p5), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
   
@@ -775,7 +791,7 @@ suppressPackageStartupMessages(library(dplyr));
 suppressPackageStartupMessages(library(data.table));
 suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
-suppressPackageStartupMessages(library(ggfortify));
+#suppressPackageStartupMessages(library(ggfortify));
 suppressPackageStartupMessages(library(plotly));
 
 #===============================================================================
@@ -1184,5 +1200,6 @@ cat('\n', paste(postscripts, collapse='\n'), "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
 
 ```
+
 
 
