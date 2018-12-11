@@ -70,6 +70,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   # bitmap(outplot, "png16m");
   par(mfrow=c(1,1));
   plot(regmodel, 5, cex.lab=1.5);
+  #saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
@@ -309,7 +310,18 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   hmap = heatmap.2(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), trace="none", cexCol=1, col=greenred(100),Colv=F, labCol=c("Proteins","Transcripts"), scale="col", hclustfun = hclust, distfun = dist);
   dev.off();
   
-  cat('<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800></td></tr>\n',
+  row.names(PE_TE_data) = PE_TE_data$PE_ID
+  p <- d3heatmap(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), scale = "col",
+                 labCol = c("Proteins", "Transcripts"),
+                 colors = greenred(100),
+                 hclustfun = hclust,
+                 distfun = dist,
+                 show_grid = FALSE)
+  saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+  
+  lines <- getPlotlyLines("PE_TE_heatmap")
+  postscripts <- c(postscripts, lines$postscripts)
+  cat('<tr><td align=center colspan="2">', lines$plotly_div, '<img src="PE_TE_heatmap.png" width=800 height=800></td></tr>\n',
     file = htmloutfile, append = TRUE);
   
   
@@ -385,9 +397,10 @@ singlesample_scatter = function(PE_TE_data, outfile)
   max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
   png(outfile, width = 10, height = 10, units = 'in', res=300);
   # bitmap(outfile, "png16m");
-  g = ggplot(PE_TE_data, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
+  g = ggplot(PE_TE_data, aes(x=TE_abundance, y=PE_abundance, label=TE_ID))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
   suppressMessages(plot(g));
   # plot(g);
+  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
 }
 
@@ -430,7 +443,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
     tempdf1$Group = c("case", "control")
   }
   
-  g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
+  g = ggplot(tempdf1, aes(x=Sample, y=value, label=variable, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
   p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
                color = tempdf1$Group,
                colors = c("#F35E5A","#18B3B7"),
@@ -439,8 +452,9 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                text = ~paste('Gene: ', tempdf1$variable,
                              '<br />Value: ', tempdf1$value)) %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  
+    
   saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outfile)))
+  #saveWidgetFix(ggplotly(g, tooltip = c("x", "fill", "label")), file.path(gsub("\\.png", "\\.html", outfile)))
   plot(g);
   dev.off();
 }
@@ -727,6 +741,7 @@ suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
 suppressPackageStartupMessages(library(ggfortify));
 suppressPackageStartupMessages(library(plotly));
+suppressPackageStartupMessages(library(d3heatmap));
 
 #===============================================================================
 # Select mode and parse experiment design file

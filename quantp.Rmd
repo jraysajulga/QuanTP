@@ -478,7 +478,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
                text = ~paste('Gene: ', tempdf1$variable,
                              '<br />Value: ', tempdf1$value)) %>%
     layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  #p <- ggplotly(g, tooltip = "all")
+  p <- ggplotly(g)
   saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outfile)))
   plot(g);
   dev.off();
@@ -629,7 +629,7 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
           # bitmap(outplot, "png16m");
           par(mfrow=c(1,1));
 
-        plot(TE_df_logfold$LogFold, -log10(TE_pval),
+        g <- plot(TE_df_logfold$LogFold, -log10(TE_pval),
              xlab="log2 fold change", ylab=volc_ylab,
              type="n")
         
