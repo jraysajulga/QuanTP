@@ -267,12 +267,14 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
     png(outplot, width = 10, height = 10, units = 'in', res=300);
     # bitmap(outplot,"png16m");
-    g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
+    g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance, label=PE_ID)) + geom_smooth() + 
+      xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + 
+      xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
+      geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
+                                PE_ID, TE_abundance, PE_abundance)))
     suppressMessages(plot(g));
     dev.off();
-    #p <- plot_ly(x = PE_TE_data_no_outlier$TE_abundance, y = PE_TE_data_no_outlier$PE_abundance)
-    p <- ggplotly(g)
-    saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+    saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
     
     
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatterplot: Before removal</font></th><th><font color=#ffcc33>Scatterplot: After removal</font></th></tr>\n', file = htmloutfile, append = TRUE);
@@ -414,7 +416,8 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
     geom_point(aes(color=as.factor(k1$cluster), 
                    text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
                                 PE_ID, TE_abundance, PE_abundance)),
-               size = 2, shape = 8) 
+               size = 2, shape = 8) +
+    theme(legend.position="none")
   saveWidgetFix(ggplotly(g, tooltip=c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<br><br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>K-mean clustering</font></th><th><font color=#ffcc33>Number of clusters: ',nclust,'</font></th></tr>\n',
