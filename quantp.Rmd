@@ -208,8 +208,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   cooksd_df$colors <- "black"
   cutoff <- as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T)
   cooksd_df[cooksd_df$cooksd > cutoff,]$colors <- "red"
-  #hello
-  print(cooksd_df)
+  
   g <- ggplot(cooksd_df, aes(x = index, y = cooksd, label = row.names(cooksd_df))) +
     ggtitle("Influential Obs. by Cook's distance") + xlab("Observations") + ylab("Cook's Distance") + 
     xlim(0, 3000) + ylim(0, .15) + scale_shape_discrete(solid=F) +
@@ -386,7 +385,6 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   legend(1, 95, legend=c("Cluster 1", "Line 2"), col="red", lty=1:1, cex=0.8)
   legend(1, 95, legend="Cluster 2", col="green", lty=1:1, cex=0.8)
   
-  
   ind=which(k1$cluster==1);
   points(PE_TE_data_kdata[ind,"TE_abundance"], PE_TE_data_kdata[ind,"PE_abundance"], col="red", pch=16);
   ind=which(k1$cluster==2);
@@ -408,6 +406,18 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   ind=which(k1$cluster==10);
   points(PE_TE_data_kdata[ind,"TE_abundance"], PE_TE_data_kdata[ind,"PE_abundance"], col="orange", pch=16);
   dev.off();
+  
+  #hello
+  #print(PE_TE_data_kdata)
+  g <- ggplot(PE_TE_data_kdata, aes(x = TE_abundance, y = PE_abundance, label = PE_ID)) +
+    xlab("Transcript Abundance") + ylab("Protein Abundance") + 
+    geom_smooth(method = "loess", span = 2/3) +
+    geom_point(aes(color=as.factor(k1$cluster)))
+                   #text=sprintf("Gene: %s<br>Cook's Distance: %.3f", row.names(cooksd_df), cooksd)),
+    #ggtitle("Influential Obs. by Cook's distance") + xlab("Observations") + ylab("Cook's Distance") + 
+    #xlim(0, 3000) + ylim(0, .15) + scale_shape_discrete(solid=F) +
+  
+  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<br><br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>K-mean clustering</font></th><th><font color=#ffcc33>Number of clusters: ',nclust,'</font></th></tr>\n',
     file = htmloutfile, append = TRUE);
