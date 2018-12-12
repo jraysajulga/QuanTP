@@ -59,9 +59,9 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   plot(regmodel, 1, cex.lab=1.5);
   dev.off();
   
-  g <- autoplot(regmodel, data = PE_TE_data)[[1]] +
-    aes(label = PE_TE_data$PE_ID) + 
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)))
+  g <- autoplot(regmodel)[[1]] +
+    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
+               shape = 2)
   saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
 
   outplot = paste(outdir,"/PE_TE_lm_2.png",sep="",collapse="");
@@ -72,10 +72,11 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   ggplotly(g)
   dev.off();
   
-  g <- autoplot(regmodel, data = PE_TE_data)[[2]] +
-    aes(label = PE_TE_data$PE_ID) + 
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)))
-  saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
+  g <- autoplot(regmodel)[[2]] +
+    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .qqx, .qqy, PE_TE_data$PE_ID)),
+               shape = 2)
+  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
+  
   
   outplot = paste(outdir,"/PE_TE_lm_5.png",sep="",collapse="");
   png(outplot, width = 10, height = 10, units = 'in',res=300);
@@ -84,10 +85,17 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   plot(regmodel, 5, cex.lab=1.5);
   dev.off();
   
-  g <- autoplot(regmodel, data = PE_TE_data)[[5]] +
+  cd_cont_pos <- function(leverage, level, model) {sqrt(level*length(coef(model))*(1-leverage)/leverage)}
+  cd_cont_neg <- function(leverage, level, model) {-cd_cont_pos(leverage, level, model)}
+
+  g <- autoplot(regmodel)[[4]] +
     aes(label = PE_TE_data$PE_ID) + 
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)))
-  saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
+    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID)),
+               shape = 2) #+
+    #stat_function(fun = cd_cont_pos, args = list(level = 0.5, model = regmodel), xlim = c(0, 0.25), lty = 2, colour = "red") +
+    #stat_function(fun = cd_cont_neg, args = list(level = 0.5, model = regmodel), xlim = c(0, 0.25), lty = 2, colour = "red") +
+    #scale_y_continuous(limits = c(-2, 2.5))
+  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
   
@@ -194,12 +202,24 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   #text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T),names(cooksd),""), col="red", pos=2)  # add labels
   dev.off();
   
-  g <- ggplot(regmodel, aes(.hat, .cooksd))+geom_point(na.rm=TRUE)+stat_smooth(method="loess", na.rm=TRUE)
-    #xlab("Leverage hii")+ylab("Cook's Distance") +
-    #ggtitle("Cook's dist vs Leverage hii/(1-hii)") + 
-    #p6<-p6+geom_abline(slope=seq(0,3,0.5), color="gray", linetype="dashed")
-    #p6<-p6+theme_bw()
-  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
+  cooksd_df <- data.frame(cooksd)
+  cooksd_df$genes <- row.names(cooksd_df)
+  cooksd_df$index <- 1:nrow(cooksd_df)
+  cooksd_df$colors <- "black"
+  cutoff <- as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T)
+  cooksd_df[cooksd_df$cooksd > cutoff,]$colors <- "red"
+  #hello
+  print(cooksd_df)
+  g <- ggplot(cooksd_df, aes(x = index, y = cooksd, label = row.names(cooksd_df))) +
+    ggtitle("Influential Obs. by Cook's distance") + xlab("Observations") + ylab("Cook's Distance") + 
+    xlim(0, 3000) + ylim(0, .15) + scale_shape_discrete(solid=F) +
+    geom_point(aes(color=as.factor(colors), 
+                   text=sprintf("Gene: %s<br>Cook's Distance: %.3f", row.names(cooksd_df), cooksd)),
+               size = 2, shape = 8)  + 
+    geom_hline(yintercept = cutoff, 
+               linetype = "dashed", color = "red") + 
+    scale_color_manual(values = c("black" = "black", "red" = "red"))
+  saveWidgetFix(ggplotly(g, tooltip= "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat(
     '<img src="PE_TE_lm_cooksd.png" width=800 height=800>',
@@ -1176,6 +1196,14 @@ cat(paste(htmllines, collapse='\n'), file = htmloutfile)
 cat('\n', paste(postscripts, collapse='\n'), "\n",
     "</body>\n</html>\n", file = htmloutfile, append = TRUE);
 
+```
+
+```{r}
+test <- data.frame(index = c(1:5),
+           name = c("a", "b", "c", "d", "e"))
+test$colors <- 1
+test[test$index < 3, ]$colors <- 2
+test
 ```
 
 
