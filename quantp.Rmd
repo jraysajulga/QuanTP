@@ -409,7 +409,7 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   
   # Interactive plot for k-means clustering
   g <- ggplot(PE_TE_data, aes(x = TE_abundance, y = PE_abundance, label = row.names(PE_TE_data))) +
-    ggtitle("Influential Obs. by Cook's distance") + xlab("Observations") + ylab("Cook's Distance") + 
+    xlab("Transcript Abundance") + ylab("Protein Abundance") + 
     scale_shape_discrete(solid=F) + geom_smooth(method = "loess", span = 2/3) +
     geom_point(aes(color=as.factor(k1$cluster), 
                    text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
