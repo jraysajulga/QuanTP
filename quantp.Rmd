@@ -737,7 +737,7 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         abline(v = log(0.5,base=2), col="red", lty=2)
         dev.off();
 
-        lines <- getPlotlyLines('TE_volcano')
+        lines <- getPlotlyLines(outplot)
         #postscripts <- c(postscripts, lines$postscripts)
         cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
             cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
@@ -958,8 +958,8 @@ PE_df[is.na(PE_df)] = 0;
 #===============================================================================
 # Obtain JS/HTML lines for interactive visualization through Plot.ly
 #===============================================================================
-getPlotlyLines = function(name){
-  lines <- readLines(paste(outdir,'/',name,'.html', sep=""))
+getPlotlyLines = function(outplot){
+  lines <- readLines(gsub("\\.png", "\\.html", outplot))
   return(list(
     'prescripts'  = c('',
                       gsub('script', 'script',
@@ -1046,7 +1046,7 @@ if(mode=="logfold")
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
-    lines <- getPlotlyLines('Box_TE_all_rep')
+    lines <- getPlotlyLines(outplot)
     prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
@@ -1068,7 +1068,7 @@ if(mode=="logfold")
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "Yes", "Samples", "Protein Abundance (log)");
-    lines <- getPlotlyLines('Box_PE_all_rep')
+    lines <- getPlotlyLines(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500>',
@@ -1097,7 +1097,7 @@ if(mode=="logfold")
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Transcript Abundance (log)");
-    lines <- getPlotlyLines('Box_TE_rep')
+    lines <- getPlotlyLines(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Sample wise distribution (Box plot) after using ',method,' on replicates </h3></font><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
@@ -1108,7 +1108,7 @@ if(mode=="logfold")
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Protein Abundance (log)");
-    lines <- getPlotlyLines('Box_PE_rep')
+    lines <- getPlotlyLines(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500>', lines$plotly_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
@@ -1143,7 +1143,7 @@ if(mode=="logfold")
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
     multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
-    lines <- getPlotlyLines('Box_TE')
+    lines <- getPlotlyLines(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Distribution (Box plot) of log fold change </h3></font>', file = htmloutfile, append = TRUE);
@@ -1153,7 +1153,7 @@ if(mode=="logfold")
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
     multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Protein Abundance fold-change(log2)");
-    lines <- getPlotlyLines('Box_PE')
+    lines <- getPlotlyLines(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$plotly_div,'</td></tr></table>\n', file = htmloutfile, append = TRUE);
@@ -1161,7 +1161,7 @@ if(mode=="logfold")
     
     # Log Fold Data
     perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-    lines <- getPlotlyLines('TE_volcano')
+    lines <- getPlotlyLines(outplot)
     postscripts <- c(postscripts, lines$postscripts)
     
     # Print PCA
@@ -1233,9 +1233,6 @@ cat('\n', paste(postscripts, collapse='\n'), "\n",
 
 ```
 
-```{r}
-outplot
-```
 
 
 
