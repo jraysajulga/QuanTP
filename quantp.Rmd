@@ -17,6 +17,7 @@ multisample_PCA = function(df, sampleinfo_df, outfile)
   png(outfile, width = 6, height = 6, units = 'in', res=300);
   # bitmap(outfile, "png16m");
   g = autoplot(prcomp(select(tempdf, -Group)), data = tempdf, colour = 'Group', size=3);
+  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
   plot(g);
   dev.off();
 }
@@ -449,11 +450,9 @@ singlesample_scatter = function(PE_TE_data, outfile)
       xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
       geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
-  saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
   suppressMessages(plot(g));
   # plot(g);
-  g <- ggplotly(g, tooltip = "text")
-  saveWidgetFix(g, file.path(gsub("\\.png", "\\.html", outfile)))
+  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
 }
 
@@ -484,32 +483,50 @@ singlesample_cor = function(PE_TE_data, htmloutfile, append=TRUE)
 multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, user_ylab)
 {
   tempdf = df[,-1, drop=FALSE];
-  rownames(tempdf) = df$Gene;
   tempdf = t(tempdf) %>% as.data.frame();
   tempdf[is.na(tempdf)] = 0;
   tempdf$Sample = rownames(tempdf);
   tempdf1 = melt(tempdf, id.vars = "Sample");
+  
+  if("Gene" %in% colnames(df)){
+    tempdf1$Name = df$Gene;
+  } else if ("Protein" %in% colnames(df)){
+    tempdf1$Name = df$Protein;
+  } else if ("Genes" %in% colnames(df)){
+    tempdf1$Name = df$Genes;
+  }
+  
   tempdf1$Group = sampleinfo_df[tempdf1$Sample,2];
   png(outplot, width = 6, height = 6, units = 'in', res=300);
   # bitmap(outplot, "png16m");
   if(fill_leg=="No"){
     tempdf1$Group = c("case", "control")
   }
-  
-  #row.names(tempdf1) <- tempdf1$variable
   #print(tempdf1)
-  g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + geom_boxplot() + labs(x=user_xlab) + labs(y=user_ylab)
-  p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
-               color = tempdf1$Group,
-               colors = c("#F35E5A","#18B3B7"),
-               type ="box",
-               hoverinfo = 'text',
-               text = ~paste('Gene: ', tempdf1$variable,
-                             '<br />Value: ', tempdf1$value)) %>%
-    layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  p <- ggplotly(g)
-  saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outfile)))
-  plot(g);
+  
+  # Labels outliers
+  is_outlier <- function(x) {
+    return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
+  }
+  tempdf1 <- mutate(tempdf1, outlier = ifelse(is_outlier(value), as.character(Name), as.character(NA)))
+  #library(ggrepel)
+  g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + 
+    geom_boxplot()+
+    #geom_text_repel(aes(label = outlier), na.rm = TRUE, nudge_y = 0.05) +
+    #geom_text_repel(data=filter(tempdf1, TRUE), aes(label = Name)) + 
+    labs(x=user_xlab) + labs(y=user_ylab)
+  
+  #aes(text=sprintf("Value: %.2f<br>Name: %s", value, Name))
+  #p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
+   #            color = tempdf1$Group,
+    #           colors = c("#F35E5A","#18B3B7"),
+     #          type ="box",
+    #           hoverinfo = 'text',
+    #           text = ~paste('Gene: ', tempdf1$variable,
+    #                         '<br />Value: ', tempdf1$value)) %>%
+    #layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
+  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
+  #plot(g);
   dev.off();
 }
 
@@ -1060,6 +1077,8 @@ if(mode=="logfold")
     # Calc TE PCA
     outplot = paste(outdir,"/PCA_TE_all_rep.png",sep="",collape="");
     multisample_PCA(TE_df, sampleinfo_df, outplot);
+    #getPlotlyLines(gsub())
+    #hello
 
     # Calc PE PCA
     outplot = paste(outdir,"/PCA_PE_all_rep.png",sep="",collape="");
@@ -1215,11 +1234,7 @@ cat('\n', paste(postscripts, collapse='\n'), "\n",
 ```
 
 ```{r}
-test <- data.frame(index = c(1:5),
-           name = c("a", "b", "c", "d", "e"))
-test$colors <- 1
-test[test$index < 3, ]$colors <- 2
-test
+outplot
 ```
 
 
