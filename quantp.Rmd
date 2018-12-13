@@ -273,8 +273,8 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
       xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
       geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
+    #suppressMessages(plot(g));
     saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
-    suppressMessages(plot(g));
     dev.off();
     
     
@@ -451,7 +451,6 @@ singlesample_scatter = function(PE_TE_data, outfile)
       geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
   suppressMessages(plot(g));
-  # plot(g);
   saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
 }
@@ -505,10 +504,10 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   #print(tempdf1)
   
   # Labels outliers
-  is_outlier <- function(x) {
-    return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
-  }
-  tempdf1 <- mutate(tempdf1, outlier = ifelse(is_outlier(value), as.character(Name), as.character(NA)))
+  #is_outlier <- function(x) {
+  #  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
+  #}
+  #tempdf1 <- mutate(tempdf1, outlier = ifelse(is_outlier(value), as.character(Name), as.character(NA)))
   #library(ggrepel)
   g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + 
     geom_boxplot()+
@@ -644,8 +643,8 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
             volc_ylab = "-log10 p-value";
           }
         }
-        outplot = paste(outdir,"/PE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
+        outplot_PE = paste(outdir,"/PE_volcano.png",sep="",collapse="");
+          png(outplot_PE, width = 10, height = 10, units = 'in', res=300);
           # bitmap(outplot, "png16m");
           par(mfrow=c(1,1));
   
@@ -667,15 +666,20 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         abline(v = log(2,base=2), col="red", lty=2)
         abline(v = log(0.5,base=2), col="red", lty=2)
         dev.off();
+        
+        g <- ggplot(PE_df_logfold, aes(x = PE_df_logfold$LogFold, -log10(PE_pval))) +
+              xlab("log2 fold change") + ylab("-log10 p-value") + 
+              geom_point()
+        saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot_PE)))
   
 
 
-        outplot = paste(outdir,"/TE_volcano.png",sep="",collapse="");
-          png(outplot, width = 10, height = 10, units = 'in', res=300);
+        outplot_TE = paste(outdir,"/TE_volcano.png",sep="",collapse="");
+          png(outplot_TE, width = 10, height = 10, units = 'in', res=300);
           # bitmap(outplot, "png16m");
           par(mfrow=c(1,1));
 
-        g <- plot(TE_df_logfold$LogFold, -log10(TE_pval),
+        plot(TE_df_logfold$LogFold, -log10(TE_pval),
              xlab="log2 fold change", ylab=volc_ylab,
              type="n")
         
@@ -700,9 +704,9 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         
         a <- list()
         for (i in seq_len(nrow(top_peaks))) {
-          m <- top_peaks[i, ]
-          a[[i]] <- list(
-            x = m[["Fold"]],
+        m <- top_peaks[i, ]
+         a[[i]] <- list(
+           x = m[["Fold"]],
             y = -log10(m[["p_value"]]),
             text = m[["external_gene_name"]],
             xref = "x",
@@ -713,13 +717,21 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
             ay = -40
           )
         }
+        # hello
+        # g <- ggplot(TE_df_logfold, aes(x = TE_df_logfold$LogFold, -log10(TE_pval))) +
+        #       xlab("log2 fold change") + ylab("-log10 p-value") + 
+        #       geom_point()
+        #g = ggplot(PE_TE_data, aes(x=TE_abundance, y=PE_abundance, label=PE_ID)) + geom_smooth() + 
+      #xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
+      #geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
+       #                         PE_ID, TE_abundance, PE_abundance)))
         
         p <- plot_ly(data = diff_df, x = ~Fold, y = -log10(diff_df$p_value),
-                     text = ~external_gene_name, mode = "markers", color = ~group) %>% 
-          layout(title ="Volcano Plot") %>%
-          layout(annotations = a) %>%
-          layout(showlegend = FALSE)
-        saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+                    text = ~external_gene_name, mode = "markers", color = ~group) %>%
+         layout(title ="Volcano Plot") %>%
+         layout(annotations = a) %>%
+         layout(showlegend = FALSE)
+        saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot_TE)))
         
         sel <- which((TE_df_logfold$LogFold<=log(2,base=2))&(TE_df_logfold$LogFold>=log(0.5, base=2))) # or whatever you want to use
         points(TE_df_logfold[sel,"LogFold"], -log10(TE_pval[sel]),col="black")
@@ -736,16 +748,17 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         abline(v = log(2,base=2), col="red", lty=2)
         abline(v = log(0.5,base=2), col="red", lty=2)
         dev.off();
-
-        lines <- getPlotlyLines(outplot)
-        #postscripts <- c(postscripts, lines$postscripts)
+        
         cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
-            cat("<tr><td align=center>", '<img src="TE_volcano.png" width=600 height=600></td>\n', file = htmloutfile, append = TRUE);
+            cat("<tr><td align=center>", 
+                '<img src="TE_volcano.png" width=600 height=600>',
+                getPlotlyLines(outplot_TE)$plotly_div,
+                '</td>\n', file = htmloutfile, append = TRUE);
             cat("<td align=center>",
-            #'<img src="PE_volcano.png" width=600 height=600>',
-            lines$plotly_div,
-            '</td></tr></table><br>\n',
-            file = htmloutfile, append = TRUE);
+                '<img src="PE_volcano.png" width=600 height=600>',
+                getPlotlyLines(outplot_PE)$plotly_div,
+                '</td></tr></table><br>\n',
+                file = htmloutfile, append = TRUE);
         
         
     }else{
@@ -1010,6 +1023,8 @@ if(mode=="logfold")
   PE_TE_data = data.frame(PE_df, TE_df);
   colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
   singlesample_scatter(PE_TE_data, outplot);  
+  getPlotlyLines(outplot)
+  # hello
   
   # TE PE Cor
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);
@@ -1162,8 +1177,8 @@ if(mode=="logfold")
     
     # Log Fold Data
     perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-    lines <- getPlotlyLines(outplot)
-    postscripts <- c(postscripts, lines$postscripts)
+    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/TE_volcano.png",sep="",collapse=""))$postscripts)
+    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_volcano.png",sep="",collapse=""))$postscripts)
     
     # Print PCA
     
