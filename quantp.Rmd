@@ -1077,13 +1077,14 @@ if(mode=="logfold")
     # Calc TE PCA
     outplot = paste(outdir,"/PCA_TE_all_rep.png",sep="",collape="");
     multisample_PCA(TE_df, sampleinfo_df, outplot);
-    #getPlotlyLines(gsub())
-    #hello
+    PCA_TE <- getPlotlyLines(outplot)
+    postscripts <- c(postscripts, PCA_TE$postscripts)
 
     # Calc PE PCA
     outplot = paste(outdir,"/PCA_PE_all_rep.png",sep="",collape="");
     multisample_PCA(PE_df, sampleinfo_df, outplot);
-    
+    PCA_PE <- getPlotlyLines(outplot)
+    postscripts <- c(postscripts, PCA_PE$postscripts)
     
     # Replicate mode
     templist = mergeReplicates(TE_df,PE_df, sampleinfo_df, method);
@@ -1167,8 +1168,8 @@ if(mode=="logfold")
     # Print PCA
     
     cat('<br><br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>PCA plot: Transcriptome data</font></th><th><font color=#ffcc33>PCA plot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500></td>\n',
-    "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500></td></tr></table>\n', 
+    "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500>', PCA_TE$plotly_div, '</td>\n',
+    "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500>', PCA_PE$plotly_div, '</td></tr></table>\n', 
       file = htmloutfile, append = TRUE);
     
     
