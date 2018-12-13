@@ -995,12 +995,12 @@ if(mode=="logfold")
   # TE PE scatter
   outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
-  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800></td></tr>\n', file = htmloutfile, append = TRUE);
+  singlesample_scatter(PE_TE_data, outplot);  
+  lines <- getPlotlyLines(outplot);
+  postscripts <- c(postscripts, lines$postscripts);
+  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$plotly_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
   PE_TE_data = data.frame(PE_df, TE_df);
   colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
-  singlesample_scatter(PE_TE_data, outplot);  
-  getPlotlyLines(outplot)
-  # hello
   
   # TE PE Cor
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);
@@ -1136,7 +1136,6 @@ if(mode=="logfold")
     outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
     multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
     lines <- getPlotlyLines(outplot)
-    #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Distribution (Box plot) of log fold change </h3></font>', file = htmloutfile, append = TRUE);
     cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
@@ -1146,7 +1145,6 @@ if(mode=="logfold")
     outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
     multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Protein Abundance fold-change(log2)");
     lines <- getPlotlyLines(outplot)
-    #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$plotly_div,'</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
@@ -1171,10 +1169,14 @@ if(mode=="logfold")
     # TE PE scatter
     outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
     cat('<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
-    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800></td>\n', file = htmloutfile, append = TRUE);
+    singlesample_scatter(PE_TE_data, outplot);  
+    lines <- getPlotlyLines(outplot);
+    postscripts <- c(postscripts, lines$postscripts);  
+    #hello
+    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' ,lines$plotly_div),
+        '</td>\n', file = htmloutfile, append = TRUE);
     PE_TE_data = data.frame(PE_df, TE_df);
     colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
-    singlesample_scatter(PE_TE_data, outplot);  
 
     # TE PE Cor
     cat("<tr><td align=center>\n", file = htmloutfile, append = TRUE);
