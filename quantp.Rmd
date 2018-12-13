@@ -270,11 +270,11 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     g = ggplot(PE_TE_data_no_outlier, aes(x=TE_abundance, y=PE_abundance, label=PE_ID)) + geom_smooth() + 
       xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + 
       xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
-      geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
+      geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
+    saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
     suppressMessages(plot(g));
     dev.off();
-    saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
     
     
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatterplot: Before removal</font></th><th><font color=#ffcc33>Scatterplot: After removal</font></th></tr>\n', file = htmloutfile, append = TRUE);
@@ -444,10 +444,15 @@ singlesample_scatter = function(PE_TE_data, outfile)
   max_lim = max(c(PE_TE_data$PE_abundance,PE_TE_data$TE_abundance));
   png(outfile, width = 10, height = 10, units = 'in', res=300);
   # bitmap(outfile, "png16m");
-  g = ggplot(PE_TE_data, aes(x=TE_abundance, y=PE_abundance, label=TE_ID))+geom_point() + geom_smooth() + xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + xlim(min_lim,max_lim) + ylim(min_lim,max_lim);
+  g = ggplot(PE_TE_data, aes(x=TE_abundance, y=PE_abundance, label=PE_ID)) + geom_smooth() + 
+      xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + 
+      xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
+      geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
+                                PE_ID, TE_abundance, PE_abundance)))
+  saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
   suppressMessages(plot(g));
   # plot(g);
-  g <- ggplotly(g, tooltip = c("label", "x", "y"))
+  g <- ggplotly(g, tooltip = "text")
   saveWidgetFix(g, file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
 }
