@@ -106,9 +106,9 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   
   cat(
     '<tr><td align=center><img src="PE_TE_lm_1.png" width=600 height=600>',
-    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$plotly_div),
+    gsub("width:500px;height:500px", "width:600px;height:600px", extractWidgetCode(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$widget_div),
     '</td><td align=center><img src="PE_TE_lm_2.png" width=600 height=600>',
-    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$plotly_div),
+    gsub("width:500px;height:500px", "width:600px;height:600px", extractWidgetCode(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$widget_div),
     '</td></tr>\n', file = htmloutfile, append = TRUE);
   
   cat(
@@ -173,7 +173,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   
   cat(
     '<tr><td align=center><img src="PE_TE_lm_5.png" width=600 height=600>', 
-    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$plotly_div)
+    gsub("width:500px;height:500px", "width:600px;height:600px", extractWidgetCode(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$widget_div)
     , '</td></tr>\n',
     file = htmloutfile, append = TRUE);
   
@@ -229,7 +229,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   
   cat(
     '<img src="PE_TE_lm_cooksd.png" width=800 height=800>',
-    gsub("width:500px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div),
+    gsub("width:500px;height:500px", "width:800px;height:800px", extractWidgetCode(outplot)$widget_div),
     '<br>In the above plot, observations above red line (',cookdist_upper_cutoff,' * mean Cook\'s distance) are influential. Genes that are outliers could be important. These observations influences the correlation values and regression coefficients<br><br>',
     file = htmloutfile, append = TRUE);    
 
@@ -280,7 +280,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
       xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
       geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
-    #suppressMessages(plot(g));
+    suppressMessages(plot(g));
     saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
     dev.off();
     
@@ -290,14 +290,14 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     cat("<tr><td align=center><!--<font color='#ff0000'><h3>Scatter plot between Proteome and Transcriptome Abundance</h3></font>\n-->",
         '<img src="TE_PE_scatter.png" width=600 height=600>',
         gsub('id="html', 'id="secondhtml"',
-             gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/TE_PE_scatter.png",sep="",collapse=""))$plotly_div)),
+             gsub("width:500px;height:500px", "width:600px;height:600px", extractWidgetCode(paste(outdir,"/TE_PE_scatter.png",sep="",collapse=""))$widget_div)),
         '</td>\n',
         file = htmloutfile, append = TRUE);
     
     # After
     cat("<td align=center>\n",
     '<img src="AbundancePlot_scatter_without_outliers.png" width=600 height=600>',
-    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(outplot)$plotly_div),
+    gsub("width:500px;height:500px", "width:600px;height:600px", extractWidgetCode(outplot)$widget_div),
     
     '</td></tr>\n',
     file = htmloutfile, append = TRUE);
@@ -387,7 +387,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
                  
   cat('<tr><td align=center colspan="2">',
       '<img src="PE_TE_heatmap.png" width=800 height=800>',
-      gsub("width:960px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div),
+      gsub("width:960px;height:500px", "width:800px;height:800px", extractWidgetCode(outplot)$widget_div),
       '</td></tr>\n',
     file = htmloutfile, append = TRUE);
   
@@ -459,7 +459,7 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   
   #paste(outdir,"/PE_TE_heatmap.png",sep="",collapse="");
   cat('<tr><td colspan="2" align=center><img src="PE_TE_kmeans.png" width=800 height=800>',
-      gsub("width:500px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div), '</td></tr>\n',
+      gsub("width:500px;height:500px", "width:800px;height:800px", extractWidgetCode(outplot)$widget_div), '</td></tr>\n',
     file = htmloutfile, append = TRUE);
   cat('<tr><td colspan="2" align=center><font size=5><a href="PE_TE_kmeans_clusterpoints.txt" target="_blank"><b>Download the cluster list</b></a></font></td></tr></table><br><hr/>\n',
     file = htmloutfile, append = TRUE);
@@ -556,7 +556,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
     #                         '<br />Value: ', tempdf1$value)) %>%
     #layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
   saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
-  #plot(g);
+  plot(g);
   dev.off();
 }
 
@@ -759,11 +759,11 @@ cat("<br><br><font size=5><b><a href='PE_TE_logfold_pval.txt' target='_blank'>Do
         cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
             cat("<tr><td align=center>", 
                 '<img src="TE_volcano.png" width=600 height=600>',
-                getPlotlyLines(outplot_TE)$plotly_div,
+                extractWidgetCode(outplot_TE)$widget_div,
                 '</td>\n', file = htmloutfile, append = TRUE);
             cat("<td align=center>",
                 '<img src="PE_volcano.png" width=600 height=600>',
-                getPlotlyLines(outplot_PE)$plotly_div,
+                extractWidgetCode(outplot_PE)$widget_div,
                 '</td></tr></table><br>\n',
                 file = htmloutfile, append = TRUE);
         
@@ -817,8 +817,6 @@ volc_with = args[10];
 
 htmloutfile = args[11]; # html output file
 outdir = args[12]; # html supporting files
-
-graph_mode = 'interactive';
 
 #===============================================================================
 # Check for file existance
@@ -977,9 +975,9 @@ TE_df[is.na(TE_df)] = 0;
 PE_df[is.na(PE_df)] = 0;
 
 #===============================================================================
-# Obtain JS/HTML lines for interactive visualization through Plot.ly
+# Obtain JS/HTML lines for interactive visualization
 #===============================================================================
-getPlotlyLines = function(outplot){
+extractWidgetCode = function(outplot){
   lines <- readLines(gsub("\\.png", "\\.html", outplot))
   return(list(
     'prescripts'  = c('',
@@ -987,7 +985,7 @@ getPlotlyLines = function(outplot){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    'plotly_div'  = paste('',
+    'widget_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='html-widget')]),
@@ -1028,9 +1026,9 @@ if(mode=="logfold")
   outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
   singlesample_scatter(PE_TE_data, outplot);  
-  lines <- getPlotlyLines(outplot);
+  lines <- extractWidgetCode(outplot);
   postscripts <- c(postscripts, lines$postscripts);
-  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$plotly_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
+  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$widget_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
   PE_TE_data = data.frame(PE_df, TE_df);
   colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
   
@@ -1047,25 +1045,25 @@ if(mode=="logfold")
   
   # TE PE Regression
   singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
-  postscripts <- c(postscripts, c(getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_cooksd.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts));
+  postscripts <- c(postscripts, c(extractWidgetCode(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_cooksd.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts));
   
   cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
   file = htmloutfile, append = TRUE);
   
   # TE PE Heatmap
   singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
-  lines <- getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
+  lines <- extractWidgetCode(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
   postscripts <- c(postscripts, lines$postscripts)
   prescripts <- c(prescripts, lines$prescripts)
   
   
   # TE PE Clustering (kmeans)
   singlesample_kmeans(PE_TE_data, htmloutfile, nclust=as.numeric(numCluster))
-  postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_TE_kmeans.png",sep="",collapse=""))$postscripts)
+  postscripts <- c(postscripts, extractWidgetCode(paste(outdir,"/PE_TE_kmeans.png",sep="",collapse=""))$postscripts)
   
 }else{
   if(mode=="multiple")
@@ -1078,44 +1076,36 @@ if(mode=="logfold")
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance (log)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
         '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
         "<tr><td align=center>", file = htmloutfile, append = TRUE);
-    if (graph_mode == 'interactive'){
-      cat(lines$plotly_div,'</td>',
-          file = htmloutfile, append = TRUE);
-    } else {
-      cat('<img src="Box_TE_all_rep.png" width=500 height=500>\n', 
-          '<!--', lines$plotly_div, '-->',
-          '</td>',
-          file = htmloutfile, append = TRUE);
-    }
+    cat('<img src="Box_TE_all_rep.png" width=500 height=500>', 
+        lines$widget_div, '</td>', file = htmloutfile, append = TRUE);
         
-
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_all_rep.png",sep="",collape="");
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "Yes", "Samples", "Protein Abundance (log)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat("<td align=center>", '<img src="Box_PE_all_rep.png" width=500 height=500>',
-          lines$plotly_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
+          lines$widget_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     # Calc TE PCA
     outplot = paste(outdir,"/PCA_TE_all_rep.png",sep="",collape="");
     multisample_PCA(TE_df, sampleinfo_df, outplot);
-    PCA_TE <- getPlotlyLines(outplot)
+    PCA_TE <- extractWidgetCode(outplot)
     postscripts <- c(postscripts, PCA_TE$postscripts)
 
     # Calc PE PCA
     outplot = paste(outdir,"/PCA_PE_all_rep.png",sep="",collape="");
     multisample_PCA(PE_df, sampleinfo_df, outplot);
-    PCA_PE <- getPlotlyLines(outplot)
+    PCA_PE <- extractWidgetCode(outplot)
     postscripts <- c(postscripts, PCA_PE$postscripts)
     
     # Replicate mode
@@ -1130,21 +1120,21 @@ if(mode=="logfold")
     temp_df_te_data = data.frame(TE_df[,1], log(TE_df[,2:length(TE_df)]));
     colnames(temp_df_te_data) = colnames(TE_df);
     multisample_boxplot(temp_df_te_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Transcript Abundance (log)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Sample wise distribution (Box plot) after using ',method,' on replicates </h3></font><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500>', lines$plotly_div, '</td>\n', file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", '<img src="Box_TE_rep.png" width=500 height=500>', lines$widget_div, '</td>\n', file = htmloutfile, append = TRUE);
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE_rep.png",sep="",collape="");
     temp_df_pe_data = data.frame(PE_df[,1], log(PE_df[,2:length(PE_df)]));
     colnames(temp_df_pe_data) = colnames(PE_df);
     multisample_boxplot(temp_df_pe_data, sampleinfo_df, outplot, "No", "Sample Groups", "Mean Protein Abundance (log)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     #prescripts <- c(prescripts, lines$prescripts)
     postscripts <- c(postscripts, lines$postscripts)
-    cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500>', lines$plotly_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
+    cat("<td align=center>", '<img src="Box_PE_rep.png" width=500 height=500>', lines$widget_div, '</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     #===============================================================================
     # Calculating log fold change and running the "single" code part 
@@ -1176,30 +1166,30 @@ if(mode=="logfold")
     # TE Boxplot
     outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
     multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Transcript Abundance fold-change (log2)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     postscripts <- c(postscripts, lines$postscripts)
     cat('<br><font color="#ff0000"><h3>Distribution (Box plot) of log fold change </h3></font>', file = htmloutfile, append = TRUE);
     cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-        "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500>', lines$plotly_div, '</td>\n', file = htmloutfile, append = TRUE);
+        "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500>', lines$widget_div, '</td>\n', file = htmloutfile, append = TRUE);
     
     # PE Boxplot
     outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
     multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Sample (log2(case/control))", "Protein Abundance fold-change(log2)");
-    lines <- getPlotlyLines(outplot)
+    lines <- extractWidgetCode(outplot)
     postscripts <- c(postscripts, lines$postscripts)
-    cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$plotly_div,'</td></tr></table>\n', file = htmloutfile, append = TRUE);
+    cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$widget_div,'</td></tr></table>\n', file = htmloutfile, append = TRUE);
     
     
     # Log Fold Data
     perform_Test_Volcano(TE_df_orig,PE_df_orig,TE_df, PE_df,sampleinfo_df_orig,method,correction_method,volc_with)
-    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/TE_volcano.png",sep="",collapse=""))$postscripts)
-    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_volcano.png",sep="",collapse=""))$postscripts)
+    postscripts <- c(postscripts, extractWidgetCode(paste(outdir,"/TE_volcano.png",sep="",collapse=""))$postscripts)
+    postscripts <- c(postscripts, extractWidgetCode(paste(outdir,"/PE_volcano.png",sep="",collapse=""))$postscripts)
     
     # Print PCA
     
     cat('<br><br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>PCA plot: Transcriptome data</font></th><th><font color=#ffcc33>PCA plot: Proteome data</font></th></tr>\n',
-    "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500>', PCA_TE$plotly_div, '</td>\n',
-    "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500>', PCA_PE$plotly_div, '</td></tr></table>\n', 
+    "<tr><td align=center>", '<img src="PCA_TE_all_rep.png" width=500 height=500>', PCA_TE$widget_div, '</td>\n',
+    "<td align=center>", '<img src="PCA_PE_all_rep.png" width=500 height=500>', PCA_PE$widget_div, '</td></tr></table>\n', 
       file = htmloutfile, append = TRUE);
     
     
@@ -1211,9 +1201,9 @@ if(mode=="logfold")
     outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
     cat('<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
     singlesample_scatter(PE_TE_data, outplot);  
-    lines <- getPlotlyLines(outplot);
+    lines <- extractWidgetCode(outplot);
     postscripts <- c(postscripts, lines$postscripts);  
-    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' , lines$plotly_div),
+    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' , lines$widget_div),
         '</td>\n', file = htmloutfile, append = TRUE);
     PE_TE_data = data.frame(PE_df, TE_df);
     colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
@@ -1231,26 +1221,26 @@ if(mode=="logfold")
     
     # TE PE Regression
     singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
-    postscripts <- c(postscripts, c(getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_cooksd.png",sep="",collapse=""))$postscripts,
-                                  getPlotlyLines(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts,
+    postscripts <- c(postscripts, c(extractWidgetCode(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/PE_TE_lm_cooksd.png",sep="",collapse=""))$postscripts,
+                                  extractWidgetCode(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts,
                                   gsub('data-for="html', 'data-for="secondhtml"', 
-                                       getPlotlyLines(paste(outdir,"/TE_PE_scatter.png",sep="",collapse=""))$postscripts)));
+                                       extractWidgetCode(paste(outdir,"/TE_PE_scatter.png",sep="",collapse=""))$postscripts)));
     
     cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
     file = htmloutfile, append = TRUE);
     
     #TE PE Heatmap
     singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
-    lines <- getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
+    lines <- extractWidgetCode(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
     postscripts <- c(postscripts, lines$postscripts)
     prescripts <- c(prescripts, lines$prescripts)
     
     #TE PE Clustering (kmeans)
     singlesample_kmeans(PE_TE_data, htmloutfile, nclust=as.numeric(numCluster))
-    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_TE_kmeans.png",sep="",collapse=""))$postscripts);
+    postscripts <- c(postscripts, extractWidgetCode(paste(outdir,"/PE_TE_kmeans.png",sep="",collapse=""))$postscripts);
   }
 }
 cat("<h3>Go To:</h3>\n",
