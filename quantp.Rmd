@@ -839,7 +839,7 @@ suppressPackageStartupMessages(library(dplyr));
 suppressPackageStartupMessages(library(data.table));
 suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
-#suppressPackageStartupMessages(library(ggfortify));
+suppressPackageStartupMessages(library(ggfortify));
 suppressPackageStartupMessages(library(plotly));
 suppressPackageStartupMessages(library(d3heatmap));
 
@@ -985,11 +985,11 @@ extractWidgetCode = function(outplot){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    'widget_div'  = paste('',
+    'widget_div'  = paste('<!--',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='html-widget')]),
-                          '', sep=''),
+                          '-->', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
@@ -1022,6 +1022,9 @@ if(mode=="logfold")
   cat('<hr/><h2 id="corr_data"><font color=#ff0000>CORRELATION</font></h2>\n',
   file = htmloutfile, append = TRUE);
   
+  PE_TE_data = data.frame(PE_df, TE_df);
+  colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
+  
   # TE PE scatter
   outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
@@ -1029,8 +1032,6 @@ if(mode=="logfold")
   lines <- extractWidgetCode(outplot);
   postscripts <- c(postscripts, lines$postscripts);
   cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$widget_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
-  PE_TE_data = data.frame(PE_df, TE_df);
-  colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
   
   # TE PE Cor
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);

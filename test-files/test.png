@@ -1,6 +1,0 @@
-<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Heatmap of PE and TE abundance values (Hierarchical clustering)</font></th><th><font color=#ffcc33>Number of clusters to extract:  5 </font></th></tr>
-<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800></td></tr>
-<tr><td colspan="2" align=center><font size=5><a href="PE_TE_hc_clusterpoints.txt" target="_blank"><b>Download the hierarchical cluster list</b></a></font></td></tr></table>
-<br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Heatmap of PE and TE abundance values (Hierarchical clustering)</font></th><th><font color=#ffcc33>Number of clusters to extract:  5 </font></th></tr>
-<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800></td></tr>
-<tr><td colspan="2" align=center><font size=5><a href="PE_TE_hc_clusterpoints.txt" target="_blank"><b>Download the hierarchical cluster list</b></a></font></td></tr></table>
