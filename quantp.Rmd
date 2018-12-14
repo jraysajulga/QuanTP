@@ -64,7 +64,6 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_point(aes(text=sprintf("Residual: %.2f<br>Fitted value: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
                shape = 1, size = .1, stroke = .2) +
     theme_light()
-  #hello
   saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
 
   outplot = paste(outdir,"/PE_TE_lm_2.png",sep="",collapse="");
@@ -94,8 +93,8 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
 
   g <- autoplot(regmodel)[[4]] +
     aes(label = PE_TE_data$PE_ID) + 
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID)),
-               shape = 2)
+    geom_point(aes(text=sprintf("Leverage: %.2f<br>Standardized residual: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID))) +
+    theme_light()
   saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
@@ -104,7 +103,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     '<tr bgcolor="#7a0019"><th>', "<font color='#ffcc33'><h4>1) <u>Residuals vs Fitted plot</h4></font></u></th>\n",
     '<th><font color=#ffcc33><h4>2) <u>Normal Q-Q plot of residuals</h4></font></u></th></tr>\n',
     file = htmloutfile, append = TRUE);
-  # hello
+  
   cat(
     '<tr><td align=center><img src="PE_TE_lm_1.png" width=600 height=600>',
     gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$plotly_div),
@@ -173,7 +172,9 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     file = htmloutfile, append = TRUE);
   
   cat(
-    '<tr><td align=center><img src="PE_TE_lm_5.png" width=600 height=600></td></tr>\n',
+    '<tr><td align=center><img src="PE_TE_lm_5.png" width=600 height=600>', 
+    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$plotly_div)
+    , '</td></tr>\n',
     file = htmloutfile, append = TRUE);
   
   cat(
