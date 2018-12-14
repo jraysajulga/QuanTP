@@ -224,7 +224,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_hline(yintercept = cutoff, 
                linetype = "dashed", color = "red") + 
     scale_color_manual(values = c("black" = "black", "red" = "red")) + 
-    theme_light()
+    theme_light() + theme(legend.position="none")
   saveWidgetFix(ggplotly(g, tooltip= "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat(
@@ -298,7 +298,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     cat("<td align=center>\n",
     '<img src="AbundancePlot_scatter_without_outliers.png" width=600 height=600>',
     gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(outplot)$plotly_div),
-    # hello
+    
     '</td></tr>\n',
     file = htmloutfile, append = TRUE);
     #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -371,11 +371,24 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
   png(outplot, width = 10, height = 10, units = 'in', res=300);
   # bitmap(outplot, "png16m");
   par(mfrow=c(1,1));
-  hmap = heatmap.2(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), trace="none", cexCol=1, col=greenred(100),Colv=F, labCol=c("Proteins","Transcripts"), scale="col", hclustfun = hclust, distfun = dist);
+  hmap = heatmap.2(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]),
+                  trace="none", cexCol=1, col=greenred(100),Colv=F, 
+                   labCol=c("Proteins","Transcripts"), scale="col", 
+                   hclustfun = hclust, distfun = dist);
+  
   dev.off();
   
-  cat('<tr><td align=center colspan="2"><img src="PE_TE_heatmap.png" width=800 height=800>',
-      gsub("width:500px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div), '</td></tr>\n',
+  
+  p <- d3heatmap(as.matrix(PE_TE_data[,c("PE_abundance","TE_abundance")]), scale = "col",
+                  dendrogram = "row", colors = greenred(100),
+                  hclustfun = hclust, distfun = dist,
+                  show_grid = FALSE)
+  saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+                 
+  cat('<tr><td align=center colspan="2">',
+      '<img src="PE_TE_heatmap.png" width=800 height=800>',
+      gsub("width:960px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div),
+      '</td></tr>\n',
     file = htmloutfile, append = TRUE);
   
   
@@ -444,7 +457,7 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   tempoutfile = paste(outdir,"/PE_TE_kmeans_clusterpoints.txt",sep="",collapse="");
   write.table(data.frame(PE_TE_data_kdata[tempind, ], Cluster=k1$cluster[tempind]), file=tempoutfile, row.names=F, quote=F, sep="\t", eol="\n")
   
-  
+  #paste(outdir,"/PE_TE_heatmap.png",sep="",collapse="");
   cat('<tr><td colspan="2" align=center><img src="PE_TE_kmeans.png" width=800 height=800>',
       gsub("width:500px;height:500px", "width:800px;height:800px", getPlotlyLines(outplot)$plotly_div), '</td></tr>\n',
     file = htmloutfile, append = TRUE);
@@ -830,6 +843,7 @@ suppressPackageStartupMessages(library(gplots));
 suppressPackageStartupMessages(library(ggplot2));
 #suppressPackageStartupMessages(library(ggfortify));
 suppressPackageStartupMessages(library(plotly));
+suppressPackageStartupMessages(library(d3heatmap));
 
 #===============================================================================
 # Select mode and parse experiment design file
@@ -976,7 +990,7 @@ getPlotlyLines = function(outplot){
     'plotly_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
-                               lines[grep(lines, pattern='plotly html-widget')]),
+                               lines[grep(lines, pattern='html-widget')]),
                           '', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
@@ -1044,7 +1058,9 @@ if(mode=="logfold")
   
   # TE PE Heatmap
   singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
-  postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))$postscripts)
+  lines <- getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
+  postscripts <- c(postscripts, lines$postscripts)
+  prescripts <- c(prescripts, lines$prescripts)
   
   
   # TE PE Clustering (kmeans)
@@ -1228,7 +1244,9 @@ if(mode=="logfold")
     
     #TE PE Heatmap
     singlesample_heatmap(PE_TE_data, htmloutfile, hm_nclust);
-    postscripts <- c(postscripts, getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))$postscripts);
+    lines <- getPlotlyLines(paste(outdir,"/PE_TE_heatmap.png",sep="",collapse=""))
+    postscripts <- c(postscripts, lines$postscripts)
+    prescripts <- c(prescripts, lines$prescripts)
     
     #TE PE Clustering (kmeans)
     singlesample_kmeans(PE_TE_data, htmloutfile, nclust=as.numeric(numCluster))
