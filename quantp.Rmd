@@ -61,8 +61,10 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   dev.off();
   
   g <- autoplot(regmodel)[[1]] +
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
-               shape = 2)
+    geom_point(aes(text=sprintf("Residual: %.2f<br>Fitted value: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
+               shape = 1, size = .1, stroke = .2) +
+    theme_light()
+  #hello
   saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
 
   outplot = paste(outdir,"/PE_TE_lm_2.png",sep="",collapse="");
@@ -74,8 +76,9 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   dev.off();
   
   g <- autoplot(regmodel)[[2]] +
-    geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .qqx, .qqy, PE_TE_data$PE_ID)),
-               shape = 2)
+    geom_point(aes(text=sprintf("Standarized residual: %.2f<br>Theoretical quantile: %.2f<br>Gene: %s", .qqx, .qqy, PE_TE_data$PE_ID)),
+               shape = 1, size = .1) +
+    theme_light()
   saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   
@@ -92,22 +95,22 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   g <- autoplot(regmodel)[[4]] +
     aes(label = PE_TE_data$PE_ID) + 
     geom_point(aes(text=sprintf("x: %.2f<br>y: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID)),
-               shape = 2) #+
-    #stat_function(fun = cd_cont_pos, args = list(level = 0.5, model = regmodel), xlim = c(0, 0.25), lty = 2, colour = "red") +
-    #stat_function(fun = cd_cont_neg, args = list(level = 0.5, model = regmodel), xlim = c(0, 0.25), lty = 2, colour = "red") +
-    #scale_y_continuous(limits = c(-2, 2.5))
+               shape = 2)
   saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
   
-    cat(
+  cat(
     '<tr bgcolor="#7a0019"><th>', "<font color='#ffcc33'><h4>1) <u>Residuals vs Fitted plot</h4></font></u></th>\n",
     '<th><font color=#ffcc33><h4>2) <u>Normal Q-Q plot of residuals</h4></font></u></th></tr>\n',
     file = htmloutfile, append = TRUE);
-  
+  # hello
   cat(
-    '<tr><td align=center><img src="PE_TE_lm_1.png" width=600 height=600></td><td align=center><img src="PE_TE_lm_2.png" width=600 height=600></td></tr>\n',
-    file = htmloutfile, append = TRUE);
+    '<tr><td align=center><img src="PE_TE_lm_1.png" width=600 height=600>',
+    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$plotly_div),
+    '</td><td align=center><img src="PE_TE_lm_2.png" width=600 height=600>',
+    gsub("width:500px;height:500px", "width:600px;height:600px", getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$plotly_div),
+    '</td></tr>\n', file = htmloutfile, append = TRUE);
   
   cat(
     '<tr><td align=center>This plot checks for linear relationship assumptions.<br>If a horizontal line is observed without any distinct patterns, it indicates a linear relationship.</td>\n',
@@ -449,7 +452,8 @@ singlesample_scatter = function(PE_TE_data, outfile)
       xlab("Transcript abundance log fold-change") + ylab("Protein abundance log fold-change") + 
       xlim(min_lim,max_lim) + ylim(min_lim,max_lim) +
       geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
-                                PE_ID, TE_abundance, PE_abundance)))
+                                PE_ID, TE_abundance, PE_abundance)),
+                 size = .5)
   suppressMessages(plot(g));
   saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile)))
   dev.off();
@@ -1015,6 +1019,9 @@ if(mode=="logfold")
   
   # TE PE Regression
   singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
+  postscripts <- c(postscripts, c(getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
+                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
+                                  getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts));
   
   cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
   file = htmloutfile, append = TRUE);
@@ -1172,8 +1179,7 @@ if(mode=="logfold")
     singlesample_scatter(PE_TE_data, outplot);  
     lines <- getPlotlyLines(outplot);
     postscripts <- c(postscripts, lines$postscripts);  
-    #hello
-    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' ,lines$plotly_div),
+    cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' , lines$plotly_div),
         '</td>\n', file = htmloutfile, append = TRUE);
     PE_TE_data = data.frame(PE_df, TE_df);
     colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
@@ -1191,6 +1197,9 @@ if(mode=="logfold")
     
     # TE PE Regression
     singlesample_regression(PE_TE_data,htmloutfile, append=TRUE);
+    postscripts <- c(postscripts, c(getPlotlyLines(paste(outdir,"/PE_TE_lm_1.png",sep="",collapse=""))$postscripts,
+                                    getPlotlyLines(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
+                                    getPlotlyLines(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts));
     
     cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
     file = htmloutfile, append = TRUE);
