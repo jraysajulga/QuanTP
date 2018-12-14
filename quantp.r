@@ -158,7 +158,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
       "<tr><td>Standard deviation (Residuals)</td><td>",res_sd,"</td></tr>\n",
       '<tr><td>Total outliers (Residual value > 2 standard deviation from the mean)</td><td>',length(tempind),' <font size=4>(<b><a href="PE_TE_outliers_residuals.txt" target="_blank">Download these ',length(tempind),' data points with high residual values here</a></b>)</font></td>\n',
       '<tr><td colspan=2 align=center>',
-      '<font size=4>(<b><a href=PE_TE_abundance_residuals.txt target="_blank">Download the complete residuals data here</a></b>)</font>',
+      '<font size=4>(<b><a href="PE_TE_abundance_residuals.txt" target="_blank">Download the complete residuals data here</a></b>)</font>',
       "</td></tr>\n</table><br><br>\n",
       file = htmloutfile, append = TRUE);
   
