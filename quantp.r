@@ -59,7 +59,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   plot(regmodel, 1, cex.lab=1.5);
   dev.off();
   
-  g <- autoplot(regmodel)[[1]] +
+  g <- autoplot(regmodel, label = FALSE)[[1]] +
     geom_point(aes(text=sprintf("Residual: %.2f<br>Fitted value: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
                shape = 1, size = .1, stroke = .2) +
     theme_light()
@@ -73,7 +73,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   ggplotly(g)
   dev.off();
   
-  g <- autoplot(regmodel)[[2]] +
+  g <- autoplot(regmodel, label = FALSE)[[2]] +
     geom_point(aes(text=sprintf("Standarized residual: %.2f<br>Theoretical quantile: %.2f<br>Gene: %s", .qqx, .qqy, PE_TE_data$PE_ID)),
                shape = 1, size = .1) +
     theme_light()
@@ -90,7 +90,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   cd_cont_pos <- function(leverage, level, model) {sqrt(level*length(coef(model))*(1-leverage)/leverage)}
   cd_cont_neg <- function(leverage, level, model) {-cd_cont_pos(leverage, level, model)}
   
-  g <- autoplot(regmodel)[[4]] +
+  g <- autoplot(regmodel, label = FALSE)[[4]] +
     aes(label = PE_TE_data$PE_ID) + 
     geom_point(aes(text=sprintf("Leverage: %.2f<br>Standardized residual: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID))) +
     theme_light()
@@ -214,13 +214,12 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
   cutoff <- as.numeric(cookdist_upper_cutoff)*mean(cooksd, na.rm=T)
   cooksd_df[cooksd_df$cooksd > cutoff,]$colors <- "red"
   
-  g <- ggplot(cooksd_df, aes(x = index, y = cooksd, label = row.names(cooksd_df))) +
+  g <- ggplot(cooksd_df, aes(x = index, y = cooksd, label = row.names(cooksd_df), color=as.factor(colors), 
+          text=sprintf("Gene: %s<br>Cook's Distance: %.3f", row.names(cooksd_df), cooksd))) +
     ggtitle("Influential Obs. by Cook's distance") + xlab("Observations") + ylab("Cook's Distance") + 
     #xlim(0, 3000) + ylim(0, .15) + 
     scale_shape_discrete(solid=F) +
-    geom_point(aes(color=as.factor(colors), 
-                   text=sprintf("Gene: %s<br>Cook's Distance: %.3f", row.names(cooksd_df), cooksd)),
-               size = 2, shape = 8)  + 
+    geom_point(size = 2, shape = 8)  + 
     geom_hline(yintercept = cutoff, 
                linetype = "dashed", color = "red") + 
     scale_color_manual(values = c("black" = "black", "red" = "red")) + 
@@ -281,7 +280,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
   suppressMessages(plot(g));
-  saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot)))
+  suppressMessages(saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot))));
   dev.off();
   
   
@@ -440,13 +439,13 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
   dev.off();
   
   # Interactive plot for k-means clustering
-  g <- ggplot(PE_TE_data, aes(x = TE_abundance, y = PE_abundance, label = row.names(PE_TE_data))) +
+  g <- ggplot(PE_TE_data, aes(x = TE_abundance, y = PE_abundance, label = row.names(PE_TE_data),
+                text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
+                PE_ID, TE_abundance, PE_abundance),
+                color=as.factor(k1$cluster))) +
     xlab("Transcript Abundance") + ylab("Protein Abundance") + 
     scale_shape_discrete(solid=F) + geom_smooth(method = "loess", span = 2/3) +
-    geom_point(aes(color=as.factor(k1$cluster), 
-                   text=sprintf("Gene: %s<br>Transcript Abundance: %.3f<br>Protein Abundance: %.3f",
-                                PE_ID, TE_abundance, PE_abundance)),
-               size = 1, shape = 8) +
+    geom_point(size = 1, shape = 8) +
     theme_light() + theme(legend.position="none")
   saveWidgetFix(ggplotly(g, tooltip=c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
   
@@ -482,7 +481,7 @@ singlesample_scatter = function(PE_TE_data, outfile)
                                 PE_ID, TE_abundance, PE_abundance)),
                size = .5)
   suppressMessages(plot(g));
-  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile)))
+  suppressMessages(saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile))))
   dev.off();
 }
 
@@ -701,12 +700,11 @@ perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfo
     abline(v = log(0.5,base=2), col="red", lty=2)
     dev.off();
     
-    g <- ggplot(PE_df_logfold, aes(x = LogFold, -log10(PE_pval))) +
+    g <- ggplot(PE_df_logfold, aes(x = LogFold, -log10(PE_pval), color = as.factor(color),
+            text=sprintf("Gene: %s<br>Log2 Fold-Change: %.3f<br>-log10 p-value: %.3f<br>p-value: %.3f",
+              Genes, LogFold, -log10(PE_pval), PE_pval))) +
       xlab("log2 fold change") + ylab("-log10 p-value") + 
-      geom_point(aes(color = as.factor(color),
-                     text=sprintf("Gene: %s<br>Log2 Fold-Change: %.3f<br>-log10 p-value: %.3f<br>p-value: %.3f",
-                                  Genes, LogFold, -log10(PE_pval), PE_pval)),
-                 shape=1, size = 1.5, stroke = .2) +
+      geom_point(shape=1, size = 1.5, stroke = .2) +
       scale_color_manual(values = c("black" = "black", "red" = "red", "blue" = "blue")) + 
       geom_hline(yintercept = -log(0.05,base=10), linetype="dashed", color="red") +
       geom_vline(xintercept = log(2,base=2), linetype="dashed", color="red") +
@@ -742,12 +740,11 @@ perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfo
     abline(v = log(0.5,base=2), col="red", lty=2)
     dev.off();
     
-    g <- ggplot(TE_df_logfold, aes(x = LogFold, -log10(TE_pval))) +
+    g <- ggplot(TE_df_logfold, aes(x = LogFold, -log10(TE_pval), color = as.factor(color),
+          text=sprintf("Gene: %s<br>Log2 Fold-Change: %.3f<br>-log10 p-value: %.3f<br>p-value: %.3f",
+                                                Genes, LogFold, -log10(TE_pval), TE_pval))) +
       xlab("log2 fold change") + ylab("-log10 p-value") + 
-      geom_point(aes(color = as.factor(color),
-                     text=sprintf("Gene: %s<br>Log2 Fold-Change: %.3f<br>-log10 p-value: %.3f<br>p-value: %.3f",
-                                  Genes, LogFold, -log10(TE_pval), TE_pval)),
-                 shape=1, size = 1.5, stroke = .2) +
+      geom_point(shape=1, size = 1.5, stroke = .2) +
       scale_color_manual(values = c("black" = "black", "red" = "red", "blue" = "blue")) + 
       geom_hline(yintercept = -log(0.05,base=10), linetype="dashed", color="red") +
       geom_vline(xintercept = log(2,base=2), linetype="dashed", color="red") +
@@ -972,11 +969,11 @@ extractWidgetCode = function(outplot){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    'widget_div'  = paste('<!--',
+    'widget_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='html-widget')]),
-                          '-->', sep=''),
+                          '', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
