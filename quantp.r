@@ -16,7 +16,7 @@ multisample_PCA = function(df, sampleinfo_df, outfile)
   png(outfile, width = 6, height = 6, units = 'in', res=300);
   # bitmap(outfile, "png16m");
   g = autoplot(prcomp(select(tempdf, -Group)), data = tempdf, colour = 'Group', size=3);
-  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g), file.path(gsub("\\.png", "\\.html", outplot)))
   plot(g);
   dev.off();
 }
@@ -63,7 +63,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_point(aes(text=sprintf("Residual: %.2f<br>Fitted value: %.2f<br>Gene: %s", .fitted, .resid, PE_TE_data$PE_ID)),
                shape = 1, size = .1, stroke = .2) +
     theme_light()
-  saveWidgetFix(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g, tooltip= c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
   
   outplot = paste(outdir,"/PE_TE_lm_2.png",sep="",collapse="");
   png(outplot,width = 10, height = 10, units = 'in', res=300);
@@ -77,7 +77,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_point(aes(text=sprintf("Standarized residual: %.2f<br>Theoretical quantile: %.2f<br>Gene: %s", .qqx, .qqy, PE_TE_data$PE_ID)),
                shape = 1, size = .1) +
     theme_light()
-  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   
   outplot = paste(outdir,"/PE_TE_lm_5.png",sep="",collapse="");
@@ -94,7 +94,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     aes(label = PE_TE_data$PE_ID) + 
     geom_point(aes(text=sprintf("Leverage: %.2f<br>Standardized residual: %.2f<br>Gene: %s", .hat, .stdresid, PE_TE_data$PE_ID))) +
     theme_light()
-  saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">', file = htmloutfile, append = TRUE);
   
@@ -224,7 +224,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
                linetype = "dashed", color = "red") + 
     scale_color_manual(values = c("black" = "black", "red" = "red")) + 
     theme_light() + theme(legend.position="none")
-  saveWidgetFix(ggplotly(g, tooltip= "text"), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g, tooltip= "text"), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat(
     '<img src="PE_TE_lm_cooksd.png" width=800 height=800>',
@@ -280,7 +280,7 @@ singlesample_regression = function(PE_TE_data,htmloutfile, append=TRUE)
     geom_point(aes(text=sprintf("Gene: %s<br>Transcript Abundance (log fold-change): %.3f<br>Protein Abundance (log fold-change): %.3f",
                                 PE_ID, TE_abundance, PE_abundance)))
   suppressMessages(plot(g));
-  suppressMessages(saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot))));
+  suppressMessages(saveWidget(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot))));
   dev.off();
   
   
@@ -382,7 +382,7 @@ singlesample_heatmap=function(PE_TE_data, htmloutfile, hm_nclust){
                  dendrogram = "row", colors = greenred(100),
                  hclustfun = hclust, distfun = dist,
                  show_grid = FALSE)
-  saveWidgetFix(p, file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(p, file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<tr><td align=center colspan="2">',
       '<img src="PE_TE_heatmap.png" width=800 height=800>',
@@ -447,7 +447,7 @@ singlesample_kmeans=function(PE_TE_data, htmloutfile, nclust){
     scale_shape_discrete(solid=F) + geom_smooth(method = "loess", span = 2/3) +
     geom_point(size = 1, shape = 8) +
     theme_light() + theme(legend.position="none")
-  saveWidgetFix(ggplotly(g, tooltip=c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
+  saveWidget(ggplotly(g, tooltip=c("text")), file.path(gsub("\\.png", "\\.html", outplot)))
   
   cat('<br><br><table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>K-mean clustering</font></th><th><font color=#ffcc33>Number of clusters: ',nclust,'</font></th></tr>\n',
       file = htmloutfile, append = TRUE);
@@ -481,7 +481,7 @@ singlesample_scatter = function(PE_TE_data, outfile)
                                 PE_ID, TE_abundance, PE_abundance)),
                size = .5)
   suppressMessages(plot(g));
-  suppressMessages(saveWidgetFix(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile))))
+  suppressMessages(saveWidget(ggplotly(g, tooltip = "text"), file.path(gsub("\\.png", "\\.html", outfile))))
   dev.off();
 }
 
@@ -531,30 +531,11 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
   if(fill_leg=="No"){
     tempdf1$Group = c("case", "control")
   }
-  #print(tempdf1)
   
-  # Labels outliers
-  #is_outlier <- function(x) {
-  #  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
-  #}
-  #tempdf1 <- mutate(tempdf1, outlier = ifelse(is_outlier(value), as.character(Name), as.character(NA)))
-  #library(ggrepel)
   g = ggplot(tempdf1, aes(x=Sample, y=value, fill=Group)) + 
     geom_boxplot()+
-    #geom_text_repel(aes(label = outlier), na.rm = TRUE, nudge_y = 0.05) +
-    #geom_text_repel(data=filter(tempdf1, TRUE), aes(label = Name)) + 
     labs(x=user_xlab) + labs(y=user_ylab)
-  
-  #aes(text=sprintf("Value: %.2f<br>Name: %s", value, Name))
-  #p <- plot_ly(y = tempdf1$value, x = tempdf1$Sample,
-  #            color = tempdf1$Group,
-  #           colors = c("#F35E5A","#18B3B7"),
-  #          type ="box",
-  #           hoverinfo = 'text',
-  #           text = ~paste('Gene: ', tempdf1$variable,
-  #                         '<br />Value: ', tempdf1$value)) %>%
-  #layout(xaxis = list(title = user_xlab), yaxis = list(title = user_ylab))
-  saveWidgetFix(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
+  saveWidget(ggplotly(g), file.path(gsub("\\.png", "\\.html", outfile)))
   plot(g);
   dev.off();
 }
@@ -562,7 +543,7 @@ multisample_boxplot = function(df, sampleinfo_df, outfile, fill_leg, user_xlab, 
 ## A wrapper to saveWidget which compensates for arguable BUG in
 ## saveWidget which requires `file` to be in current working
 ## directory.
-saveWidgetFix <- function (widget,file,...) {
+saveWidget <- function (widget,file,...) {
   wd<-getwd()
   on.exit(setwd(wd))
   outDir<-dirname(file)
@@ -710,7 +691,7 @@ perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfo
       geom_vline(xintercept = log(2,base=2), linetype="dashed", color="red") +
       geom_vline(xintercept = log(0.5,base=2), linetype="dashed", color="red") +
       theme_light() + theme(legend.position="none")
-    saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot_PE)))
+    saveWidget(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot_PE)))
     
     outplot_TE = paste(outdir,"/TE_volcano.png",sep="",collapse="");
     png(outplot_TE, width = 10, height = 10, units = 'in', res=300);
@@ -750,7 +731,7 @@ perform_Test_Volcano = function(TE_df_data,PE_df_data,TE_df_logfold, PE_df_logfo
       geom_vline(xintercept = log(2,base=2), linetype="dashed", color="red") +
       geom_vline(xintercept = log(0.5,base=2), linetype="dashed", color="red") +
       theme_light() + theme(legend.position="none")
-    saveWidgetFix(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot_TE)))
+    saveWidget(ggplotly(g, tooltip="text"), file.path(gsub("\\.png", "\\.html", outplot_TE)))
     
     
     cat('<br><table  border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Transcript Fold-Change</font></th><th><font color=#ffcc33>Protein Fold-Change</font></th></tr>\n', file = htmloutfile, append = TRUE);
