@@ -950,11 +950,11 @@ extractWidgetCode = function(outplot){
                            lines[grep('<head>',lines) + 3
                                  :grep('</head>' ,lines) - 5]),
                       ''),
-    'widget_div'  = paste('<!--',
+    'widget_div'  = paste('',
                           gsub('width:100%;height:400px',
                                'width:500px;height:500px',
                                lines[grep(lines, pattern='html-widget')]),
-                          '-->', sep=''),
+                          '', sep=''),
     'postscripts' = paste('',
                           gsub('script', 'script',
                                lines[grep(lines, pattern='<script type')]),
@@ -974,28 +974,33 @@ if(mode=="logfold")
   
   # TE Boxplot
   outplot = paste(outdir,"/Box_TE.png",sep="",collape="");
+  multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
+  lines <- extractWidgetCode(outplot)
+  prescripts <- c(prescripts, lines$prescripts)
+  postscripts <- c(postscripts, lines$postscripts)
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; ">\n',
       '<tr bgcolor="#7a0019"><th><font color=#ffcc33>Boxplot: Transcriptome data</font></th><th><font color=#ffcc33>Boxplot: Proteome data</font></th></tr>\n',
-      "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500></td>\n', file = htmloutfile, append = TRUE);
-  multisample_boxplot(TE_df, sampleinfo_df, outplot, "Yes", "Samples", "Transcript Abundance data");
+      "<tr><td align=center>", '<img src="Box_TE.png" width=500 height=500>', lines$widget_div, '</td>\n', file = htmloutfile, append = TRUE);
   
   # PE Boxplot
   outplot = paste(outdir,"/Box_PE.png",sep="",collape="");
-  cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500></td></tr></table>\n', file = htmloutfile, append = TRUE);
   multisample_boxplot(PE_df, sampleinfo_df, outplot, "Yes", "Samples", "Protein Abundance data");
-  
+  lines <- extractWidgetCode(outplot)
+  postscripts <- c(postscripts, lines$postscripts)
+  cat("<td align=center>", '<img src="Box_PE.png" width=500 height=500>', lines$widget_div, 
+      '</td></tr></table>\n', file = htmloutfile, append = TRUE);
   cat('<hr/><h2 id="corr_data"><font color=#ff0000>CORRELATION</font></h2>\n',
       file = htmloutfile, append = TRUE);
   
   # TE PE scatter
+  PE_TE_data = data.frame(PE_df, TE_df);
+  colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
   outplot = paste(outdir,"/TE_PE_scatter.png",sep="",collape="");
   cat('<table border=1 cellspacing=0 cellpadding=5 style="table-layout:auto; "> <tr bgcolor="#7a0019"><th><font color=#ffcc33>Scatter plot between Proteome and Transcriptome Abundance</font></th></tr>\n', file = htmloutfile, append = TRUE);
   singlesample_scatter(PE_TE_data, outplot);  
   lines <- extractWidgetCode(outplot);
   postscripts <- c(postscripts, lines$postscripts);
   cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$widget_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
-  PE_TE_data = data.frame(PE_df, TE_df);
-  colnames(PE_TE_data) = c("PE_ID","PE_abundance","TE_ID","TE_abundance");
   
   # TE PE Cor
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);
