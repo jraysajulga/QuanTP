@@ -1000,7 +1000,7 @@ if(mode=="logfold")
   singlesample_scatter(PE_TE_data, outplot);  
   lines <- extractWidgetCode(outplot);
   postscripts <- c(postscripts, lines$postscripts);
-  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', lines$widget_div, '</td></tr>\n', file = htmloutfile, append = TRUE);
+  cat("<tr><td align=center>", '<img src="TE_PE_scatter.png" width=800 height=800>', gsub('width:500px;height:500px', 'width:800px;height:800px' , lines$widget_div), '</td></tr>\n', file = htmloutfile, append = TRUE);
   
   # TE PE Cor
   cat("<tr><td align=center>", file = htmloutfile, append = TRUE);
@@ -1019,7 +1019,9 @@ if(mode=="logfold")
                                   extractWidgetCode(paste(outdir,"/PE_TE_lm_2.png",sep="",collapse=""))$postscripts,
                                   extractWidgetCode(paste(outdir,"/PE_TE_lm_5.png",sep="",collapse=""))$postscripts,
                                   extractWidgetCode(paste(outdir,"/PE_TE_lm_cooksd.png",sep="",collapse=""))$postscripts,
-                                  extractWidgetCode(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts));
+                                  extractWidgetCode(paste(outdir,"/AbundancePlot_scatter_without_outliers.png",sep="",collapse=""))$postscripts,
+                                  gsub('data-for="html', 'data-for="secondhtml"', 
+                                       extractWidgetCode(paste(outdir,"/TE_PE_scatter.png",sep="",collapse=""))$postscripts)))
   
   cat('<hr/><h2 id="cluster_data"><font color=#ff0000>CLUSTER ANALYSIS</font></h2>\n',
       file = htmloutfile, append = TRUE);
