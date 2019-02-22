@@ -169,7 +169,7 @@ ii. PC: Press "Win-R", type "cmd" and press "Enter"
 iii. Linux: Ctrl + Alt + T
 2. Install the container
     a. Enter this command into your terminal:
-       **docker run -d - p 8080:80 galaxyp/quantp**
+       ```docker run -d - p 8080:80 galaxyp/quantp```
     b. The QuanTP image will be downloaded from the Docker Hub and will initialize
        itself into a container. This will take a few minutes.
     c. Once the container is initialized, the terminal will output your container's ID and
