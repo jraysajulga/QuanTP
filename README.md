@@ -119,6 +119,7 @@ credentials.
     ![volcano-plot](assets/volcano-plot.png)
 - On the heatmap, click and drag a box across a subsection to zoom in. To reset the view, double click the heatmap.
     ![heatmap](assets/heatmap.png)
+    
 ---
 
 ## S2: Instructions for accessing and running the Mouse data [⤴](#table-of-contents)
