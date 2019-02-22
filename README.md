@@ -35,9 +35,9 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 ##### Table of Contents:
   * [S1: Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-tool-on-jetstream)
   * [S2: Instructions for accessing and running the Mouse data](#s2-instructions-for-accessing-and-running-the-mouse-data)
-  * [S3: Instructions for accessing zebrafish embryo data](#s3--instructions-for-accessing-zebrafish-embryo-data)
-  * [S4: Accessing the QuanTP Docker Image](#s4--accessing-the-quantp-docker-image)
-  * [S5: Accessing the QuanTP on the usegalaxy.eu](#s5--accessing-the-quantp-on-the-usegalaxyeu)
+  * [S3: Instructions for accessing zebrafish embryo data](#s3-instructions-for-accessing-zebrafish-embryo-data)
+  * [S4: Accessing the QuanTP Docker Image](#s4-accessing-the-quantp-docker-image)
+  * [S5: Accessing the QuanTP on the usegalaxy.eu](#s5-accessing-the-quantp-on-the-usegalaxyeu)
   * [Supplementary Figure](#supplementary-figure)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -46,7 +46,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 # SUPPORTING INFORMATION
 
-## S1 | Instructions for accessing the QuanTP tool on Jetstream [⤴](#table-of-contents)
+## S1: Instructions for accessing the QuanTP tool on Jetstream [⤴](#table-of-contents)
 
 1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
     the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/)), a cloud-based resource for scientific
@@ -93,7 +93,7 @@ credentials.
     output for offline viewing and sharing, click on the disk icon. This will
     download the complete HTML output and its supporting files in an archived zip file.
 
-## S2: Instructions for accessing and running the Mouse data
+## S2: Instructions for accessing and running the Mouse data [⤴](#table-of-contents)
 ```
 (Heydarian M., Luperchio T.R., Cutler J., Mitchell C.J., Kim M.S., Pandey A., Sollner-Webb B., Reddy K.
 Prediction of Gene Activity in Early B Cell Development Based on an Integrative Multi-Omics Analysis.
@@ -127,7 +127,7 @@ _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1
     displayed in yellow color while running and green once completed. The output of the tool
     is in the HTML format. To view this output, click on the eye icon. ![figure-s1](assets/figure-s1.png)
 
-## S3: Instructions for accessing zebrafish embryo data
+## S3: Instructions for accessing zebrafish embryo data [⤴](#table-of-contents)
 (Alli Shaik, A.; Wee, S.; Li, R. H. X.; Li, Z.; Carney, T. J.; Mathavan, S.; Gunaratne, J. Functional Mapping of
 the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014** , _13_ (12), 5536–5550.)
 
@@ -141,7 +141,7 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 4. To view this output, click on the eye icon. ![figure-s1](assets/figure-s1.png)
 
 
-## S4: Accessing the QuanTP Docker Image
+## S4: Accessing the QuanTP Docker Image [⤴](#table-of-contents)
 _Up-to-date instructions and a Dockerfile can be accessed at [https://z.umn.edu/quantpdocker](https://z.umn.edu/quantpdocker)._
 
 1. Download and install Docker ([https://www.docker.com/get-started](https://www.docker.com/get-started)). Once installed,
@@ -177,7 +177,7 @@ iii. Linux: Ctrl + Alt + T
 ii. Using this ID, issue this command: ```docker kill [ID]```
 
 
-## S5: Accessing the QuanTP on the usegalaxy.eu
+## S5: Accessing the QuanTP on the usegalaxy.eu [⤴](#table-of-contents)
 1. Go to “https://usegalaxy.eu”. This is a European Galaxy platform.
 2. The Galaxy instance requires that all users input an email address to access tools and
     workflows. To register, perform the following steps:
@@ -201,7 +201,7 @@ ii. Using this ID, issue this command: ```docker kill [ID]```
 Once the tool is executed, the output will show up on the active history pane. The output of the
 tool is in the HTML format. To view this output, click on the eye icon. ![figure-s1](assets/figure-s1.png)
 
-## Supplementary Figure
+## Supplementary Figure [⤴](#table-of-contents)
 **Figure S1.** Example input data file format
 
 ![figure-s1](assets/figure-s1.png)
