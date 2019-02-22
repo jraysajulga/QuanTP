@@ -35,7 +35,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
 
-2.21.19 - All plots can now be viewed via plotly for interactivity! Instructions for enabling this are [here](#interactive-viewer-instructions).
+2.21.19 - All plots can now be viewed via [Plotly](https://plot.ly/javascript/) for interactivity! Instructions for enabling this are [here](#interactive-viewer-instructions).
 ![interactive-viewer](assets/interactive-viewer.png)
 
 ---
@@ -99,6 +99,15 @@ credentials.
     in the HTML format. To view this output, click on the eye icon ![eye-icon](assets/eye-icon.png). To download the
     output for offline viewing and sharing, click on the disk icon ![disk-icon](assets/disk-icon.png). This will
     download the complete HTML output and its supporting files in an archived zip file.
+
+### S1a : Instructions for Enable Interactivity [⤴](#table-of-contents)
+
+1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click the visualization icon.
+    ![visualization-icon](assets/visualization-icon.png)
+
+2. In the resulting pane, click "Interactive Viewer".
+    ![interactive-viewer](assets/interactive-viewer.png)
+
 
 ---
 
