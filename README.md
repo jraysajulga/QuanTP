@@ -36,6 +36,11 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 ### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
 
 2.21.19 - All plots can now be viewed via [Plotly](https://plot.ly/javascript/) for interactivity! Instructions for enabling this are [here](#s1a-instructions-for-enabling-interactivity-).
+
+Features:
+- Zooming and panning
+- Export plots in png format
+- Mousing over points to view more details and compare them with one another
 ![interactive-viewer](assets/interactive-viewer.png)
 
 ---
