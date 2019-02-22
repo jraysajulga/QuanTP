@@ -6,7 +6,7 @@ Praveen Kumar †‡▽, Priyabrata Panigrahi §▽, James Johnson ∥∥, Wanda
 Subina Mehta ‡, Ray Sajulga ‡, Caleb Easterly ‡, Brian A. Crooker ⊥, Mohammad
 Heydarian #, Krishanpal Anamika \*§, Timothy J. Griffin ‡, and Pratik D. Jagtap\*‡
 
-```
+
 † Bioinformatics and Computational Biology Program, University of Minnesota-
 Rochester, Rochester, Minnesota 55904, United States
 
@@ -23,7 +23,7 @@ United States
 
 \# Department of Biology, Johns Hopkins University, Baltimore, Maryland 21218, United
 States
-```
+
 
 ▽ these authors contributed equally to this work
 
@@ -50,12 +50,12 @@ Figure S1: Example input data file format Page S- 6
     computing and research.
 2. The Galaxy Jetstream instance requires that all users input an email address to access
     tools and workflows. To register, perform the following steps:  
-   a. Click on the “Login or Register” tab and click on “Register”. Enter an email address,
+   - Click on the “Login or Register” tab and click on “Register”. Enter an email address,
 password and public name of choosing. [ NOTE: Users choosing to remain
 anonymous can enter an email in the form of "guest@galaxyp.org", along with a
 password and public name of your choosing. Also note that this instance is solely
 for training purposes, and not for long-term use or testing with large datasets.]  
-   b. Once registered, click on the "User" tab and click on “Login” with your user
+   - Once registered, click on the "User" tab and click on “Login” with your user
 credentials.
 
 3. The Galaxy interface is divided into three panels: a _Tool pane_ on the left side of the
