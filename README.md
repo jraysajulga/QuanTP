@@ -108,10 +108,17 @@ credentials.
 1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click on that HTML file to expand the options, then select the visualization icon:  
     ![visualization-icon](assets/visualization-icon.png)
 
-2. In the resulting pane, click "Interactive Viewer".
+2. In the resulting pane, click "Interactive Viewer" and allow the viewer to render for a few seconds.
     ![visualizations](assets/visualizations.png)
 
+#### Things to try:
 
+- Zoom in/out and pan around.
+- Hover over data points to view more information about the selected datum.
+- Activate "compare data on hover" to compare similar points:
+    ![volcano-plot](assets/volcano-plot.png)
+- On the heatmap, click and drag a box across a subsection to zoom in. To reset the view, double click the heatmap.
+    ![heatmap](assets/heatmap.png)
 ---
 
 ## S2: Instructions for accessing and running the Mouse data [⤴](#table-of-contents)
