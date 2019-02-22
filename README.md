@@ -73,6 +73,7 @@ credentials.
     Then, click on to import all the input files. The input file consists of protein,
     transcript abundance data and an experimental design file, all in tabular format.
 5. Once the files have been imported, these will show up as items in our active history.
+    ![history](assets/history.png)
 6. The goal of the tool is to use the protein and transcript abundance file to create an HTML
     output that acts as a compilation of QuanTP's proteo-transcriptomic quantification and correlation.
     To access the tool, click on the search panel on the Tool pane. Search for “QuanTP”. Or you could 
