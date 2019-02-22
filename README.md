@@ -101,13 +101,15 @@ credentials.
     output for offline viewing and sharing, click on the disk icon ![disk-icon](assets/disk-icon.png). This will
     download the complete HTML output and its supporting files in an archived zip file.
 
-### S1a : Instructions for Enabling Interactivity [⤴](#table-of-contents)
+---
+
+## S1a : Instructions for Enabling Interactivity [⤴](#table-of-contents)
 
 1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click the visualization icon.
     ![visualization-icon](assets/visualization-icon.png)
 
 2. In the resulting pane, click "Interactive Viewer".
-    ![interactive-viewer](assets/interactive-viewer.png)
+    ![visualizations](assets/visualizations.png)
 
 
 ---
