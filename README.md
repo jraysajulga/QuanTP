@@ -7,23 +7,22 @@ Subina Mehta ‡, Ray Sajulga ‡, Caleb Easterly ‡, Brian A. Crooker ⊥, Moh
 Heydarian #, Krishanpal Anamika \*§, Timothy J. Griffin ‡, and Pratik D. Jagtap\*‡
 
 
-† Bioinformatics and Computational Biology Program, University of Minnesota-
-Rochester, Rochester, Minnesota 55904, United States
+   † Bioinformatics and Computational Biology Program, University of Minnesota-
+   Rochester, Rochester, Minnesota 55904, United States
 
-‡ Department of Biochemistry, Molecular Biology, and Biophysics, University of
-Minnesota, Minneapolis, Minnesota 55455, United States
+   ‡ Department of Biochemistry, Molecular Biology, and Biophysics, University of
+   Minnesota, Minneapolis, Minnesota 55455, United States
 
-§ LABS, Persistent Systems, Aryabhata-Pingala, Erandwane, Pune 411004, India
+   § LABS, Persistent Systems, Aryabhata-Pingala, Erandwane, Pune 411004, India
 
-∥∥ Minnesota Supercomputing Institute, University of Minnesota, Minneapolis, Minnesota
-55455, United States
+   ∥∥ Minnesota Supercomputing Institute, University of Minnesota, Minneapolis, Minnesota
+   55455, United States
 
-⊥ Department of Animal Science, University of Minnesota, St. Paul, Minnesota 55108,
-United States
+   ⊥ Department of Animal Science, University of Minnesota, St. Paul, Minnesota 55108,
+   United States
 
-\# Department of Biology, Johns Hopkins University, Baltimore, Maryland 21218, United
-States
-
+   \# Department of Biology, Johns Hopkins University, Baltimore, Maryland 21218, United
+   States
 
 *▽ these authors contributed equally to this work*
 
