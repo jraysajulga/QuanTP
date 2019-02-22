@@ -1,6 +1,4 @@
-# SUPPORTING INFORMATION
-
-## <a href="https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.8b00727" target="_blank">QuanTP: A Software Resource for Quantitative Proteo-Transcriptomic Comparative Data Analysis and Informatics</a>
+# <a href="https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.8b00727" target="_blank">QuanTP: A Software Resource for Quantitative Proteo-Transcriptomic Comparative Data Analysis and Informatics</a>
 
 Praveen Kumar †‡▽, Priyabrata Panigrahi §▽, James Johnson ∥∥, Wanda J. Weber ⊥,
 Subina Mehta ‡, Ray Sajulga ‡, Caleb Easterly ‡, Brian A. Crooker ⊥, Mohammad
