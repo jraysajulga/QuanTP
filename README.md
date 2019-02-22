@@ -46,7 +46,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 # SUPPORTING INFORMATION
 
-## S1 Instructions for accessing the QuanTP tool on Jetstream
+## S1 Instructions for accessing the QuanTP tool on Jetstream [⤴️](#table-of-contents)
 
 1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
     the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/)), a cloud-based resource for scientific
