@@ -33,7 +33,7 @@ Email: pjagtap@umn.edu and anamika_krishanpal@persistent.com
 Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ##### Table of Contents:
-  * [S1: Instructions for accessing the QuanTP tool on Jetstream](#s1:--instructions-for-accessing-the-quantp-tool-on-jetstream)
+  * [S1: Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-tool-on-jetstream)
   * [S2: Instructions for accessing and running the Mouse data](#s2--instructions-for-accessing-and-running-the-mouse-data)
   * [S3: Instructions for accessing zebrafish embryo data](#s3--instructions-for-accessing-zebrafish-embryo-data)
   * [S4: Accessing the QuanTP Docker Image](#s4--accessing-the-quantp-docker-image)
@@ -46,7 +46,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 # SUPPORTING INFORMATION
 
-## S1: Instructions for accessing the QuanTP tool on Jetstream
+## S1 Instructions for accessing the QuanTP tool on Jetstream
 
 1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
     the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/)), a cloud-based resource for scientific
