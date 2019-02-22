@@ -1,11 +1,10 @@
 # SUPPORTING INFORMATION
 
-## QuanTP: A Software Resource for Quantitative Proteo-Transcriptomic Comparative Data Analysis and Informatics
+## [QuanTP: A Software Resource for Quantitative Proteo-Transcriptomic Comparative Data Analysis and Informatics](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.8b00727)
 
 Praveen Kumar †‡▽, Priyabrata Panigrahi §▽, James Johnson ∥∥, Wanda J. Weber ⊥,
 Subina Mehta ‡, Ray Sajulga ‡, Caleb Easterly ‡, Brian A. Crooker ⊥, Mohammad
 Heydarian #, Krishanpal Anamika \*§, Timothy J. Griffin ‡, and Pratik D. Jagtap\*‡
-
 
    † Bioinformatics and Computational Biology Program, University of Minnesota-
    Rochester, Rochester, Minnesota 55904, United States
