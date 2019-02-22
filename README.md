@@ -190,10 +190,10 @@ ii. Using this ID, issue this command: ```docker kill [ID]```
     Select the QuanTP tool. Now the interface of this tool is displayed on the center pane.
 5. Go to options on the right end of the center Pane and click on it. Select the “Generate Tour”
     option.
-    ![generate-tour](assets/generate-tour)
+    ![generate-tour](assets/generate-tour.png)
 6. Once you select the “Generate Tour” option. Galaxy will import the required test Data to
     run the tour. The interactive tour will guide you through the steps required to run the tool.
-    ![tour-prompt](assets/tour-prompt)
+    ![tour-prompt](assets/tour-prompt.png)
 7. Select the appropriate inputs as guided by the tour and once completed, select “Execute”.
 Once the tool is executed, the output will show up on the active history pane. The output of the
 tool is in the HTML format. To view this output, click on the eye icon.
@@ -201,7 +201,7 @@ tool is in the HTML format. To view this output, click on the eye icon.
 ## Supplementary Figure
 **Figure S1.** Example input data file format
 
-![figure-s1](assets/figure-s1)
+![figure-s1](assets/figure-s1.png)
 
 **Figure S1.** The three tables here describe the format of the input files to QuanTP tool, required
 in the “abundance mode”. The first two files should contain gene symbols and abundance
