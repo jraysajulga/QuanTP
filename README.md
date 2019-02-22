@@ -80,21 +80,9 @@ credentials.
 7. The QuanTP tool’s interface will now show up on your _Main viewing pane_. To run this tool
     on the imported input files in the active History, the user has to make sure to select the
     appropriate inputs.
-8. Select the below mentioned inputs and then click on **Execute**.
+8. Select the inputs as shown below and then click on **Execute**.
+    ![tool-cow-parameters](assets/tool_cow.png)
 
-```
-a. Input Protein Abundance File : “protein_data.tabular”
-b. Input RNA Abundance File : “transcript_data.tabular”
-c. Select data type: "Abundances from different conditions with or without
-replicates (in multiple columns)"
-i. Experiment design File : “exp_design_file.tabular”
-ii. Data summarization method : “Mean” (default)
-iii. Multiple testing correction method : “Benjamini and Hochberg (BH)” (default)
-iv. Volcano plot with p-value or adjusted p-value : “P-value” (default)
-d. I nfluential Observation cutoff : “4”
-e. K-mean clustering: Number of clusters : “4”
-f. Hierarchical clustering: Number of clusters (from Heatmap) : “5”
-```
 9. Once the tool is executed, the output will show up on the active history pane. It will be
     displayed in yellow color while running and green once complete. The output of the tool is
     in the HTML format. To view this output, click on the eye icon .To download the
