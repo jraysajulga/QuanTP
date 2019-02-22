@@ -46,18 +46,16 @@ Figure S1: Example input data file format Page S- 6
 ## S1: Instructions for accessing the QuanTP tool on Jetstream
 
 1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
-    the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/), a cloud-based resource for scientific
+    the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/)), a cloud-based resource for scientific
     computing and research.
 2. The Galaxy Jetstream instance requires that all users input an email address to access
     tools and workflows. To register, perform the following steps:
-
-a. Click on the “Login or Register” tab and click on “Register”. Enter an email address,
+* Click on the “Login or Register” tab and click on “Register”. Enter an email address,
 password and public name of choosing. [ NOTE: Users choosing to remain
 anonymous can enter an email in the form of "guest@galaxyp.org", along with a
 password and public name of your choosing. Also note that this instance is solely
 for training purposes, and not for long-term use or testing with large datasets.]
-
-b. Once registered, click on the "User" tab and click on “Login” with your user
+* Once registered, click on the "User" tab and click on “Login” with your user
 credentials.
 
 3. The Galaxy interface is divided into three panels: a _Tool pane_ on the left side of the
