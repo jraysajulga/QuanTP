@@ -33,12 +33,15 @@ Email: pjagtap@umn.edu and anamika_krishanpal@persistent.com
 Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ##### Table of Contents:
-[S1: Instructions for accessing the QuanTP tool on Jetstream Page S- 1](## S1: Instructions for accessing the QuanTP tool on Jetstream)  
-S2: Instructions for accessing and running the Mouse data Page S- 2
-S3: Instructions for accessing zebrafish embryo data Page S- 3
-S4: Accessing the QuanTP Docker Image Page S- 4
-S5: Accessing the QuanTP on the usegalaxy.eu Page S- 5
-Figure S1: Example input data file format Page S- 6
+  * [S1: Instructions for accessing the QuanTP tool on Jetstream](#s1--instructions-for-accessing-the-quantp-tool-on-jetstream)
+  * [S2: Instructions for accessing and running the Mouse data](#s2--instructions-for-accessing-and-running-the-mouse-data)
+  * [S3: Instructions for accessing zebrafish embryo data](#s3--instructions-for-accessing-zebrafish-embryo-data)
+  * [S4: Accessing the QuanTP Docker Image](#s4--accessing-the-quantp-docker-image)
+  * [S5: Accessing the QuanTP on the usegalaxy.eu](#s5--accessing-the-quantp-on-the-usegalaxyeu)
+  * [Supplementary Figure](#supplementary-figure)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 
 # SUPPORTING INFORMATION
@@ -208,9 +211,5 @@ in the “abundance mode”. The first two files should contain gene symbols and
 values for protein or transcript. The third file, experiment design, defines the sample (column)
 names in the first two input files along with defining “case” and “control” groups in the first two
 lines.
-
-# For any future updates to the QuanTP tool features and its
-
-# documentation, please visit: http://z.umn.edu/quantpsi
 
 
