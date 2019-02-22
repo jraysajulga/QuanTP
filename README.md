@@ -91,11 +91,10 @@ credentials.
     download the complete HTML output and its supporting files in an archived zip file.
 
 ## S2: Instructions for accessing and running the Mouse data [⤴](#table-of-contents)
-```
 (Heydarian M., Luperchio T.R., Cutler J., Mitchell C.J., Kim M.S., Pandey A., Sollner-Webb B., Reddy K.
 Prediction of Gene Activity in Early B Cell Development Based on an Integrative Multi-Omics Analysis.
 _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1000302)
-```
+
 1. To access the inputs for the mouse data click on “Shared Data”→ “Data libraries”→
     “QuanTP Inputs” → “QuanTP_mouse_input **”,** select all files in the folder**.** Then, click on
        to import all the input files. The input file consists of protein, transcript
