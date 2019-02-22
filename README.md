@@ -42,7 +42,7 @@ Features:
 
 ---
 
-## S1: Instructions for accessing the QuanTP tool on Jetstream [⤴](#table-of-contents)
+## S1: Instructions for accessing the QuanTP tool on Jetstream
 
 1. Go to <a href="http://z.umn.edu/proteogenomicsgateway" target="_blank">z.umn.edu/proteogenomicsgateway</a>. This is a public Galaxy gateway hosted on
     the Jetstream (<a href="https://jetstream-cloud.org/" target="_blank">https://jetstream-cloud.org/</a>), a cloud-based resource for scientific
@@ -91,7 +91,7 @@ credentials.
 
 ---
 
-### S1a: Instructions for Enabling Interactivity [⤴](#table-of-contents)
+### S1a: Instructions for Enabling Interactivity
 
 1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click on that HTML file to expand the options, then select the visualization icon:  
     ![visualization-icon](assets/visualization-icon.png)
@@ -110,7 +110,7 @@ credentials.
     
 ---
 
-## S2: Instructions for accessing and running the Mouse data [⤴](#table-of-contents)
+## S2: Instructions for accessing and running the Mouse data
 (Heydarian M., Luperchio T.R., Cutler J., Mitchell C.J., Kim M.S., Pandey A., Sollner-Webb B., Reddy K.
 Prediction of Gene Activity in Early B Cell Development Based on an Integrative Multi-Omics Analysis.
 _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1000302)
@@ -143,7 +143,7 @@ _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1
     displayed in yellow color while running and green once completed. The output of the tool
     is in the HTML format. To view this output, click on the eye icon. ![eye-icon](assets/eye-icon.png)
 
-## S3: Instructions for accessing zebrafish embryo data [⤴](#table-of-contents)
+## S3: Instructions for accessing zebrafish embryo data
 (Alli Shaik, A.; Wee, S.; Li, R. H. X.; Li, Z.; Carney, T. J.; Mathavan, S.; Gunaratne, J. Functional Mapping of
 the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014** , _13_ (12), 5536–5550.)
 
@@ -158,7 +158,7 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 
 ---
 
-## S4: Accessing the QuanTP Docker Image [⤴](#table-of-contents)
+## S4: Accessing the QuanTP Docker Image
 _Up-to-date instructions and a Dockerfile can be accessed at <a href="http://z.umn.edu/quantpdocker" target="_blank">z.umn.edu/quantpdocker</a>._
 
 1. Download and install Docker (<a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a>). Once installed,
@@ -195,7 +195,7 @@ ii. Using this ID, issue this command: ```docker kill [ID]```
 
 ---
 
-## S5: Accessing the QuanTP on the usegalaxy.eu [⤴](#table-of-contents)
+## S5: Accessing the QuanTP on the usegalaxy.eu
 1. Go to <a href="https://usegalaxy.eu" target="_blank">https://usegalaxy.eu</a>. This is a European Galaxy platform.
 2. The Galaxy instance requires that all users input an email address to access tools and
     workflows. To register, perform the following steps:
