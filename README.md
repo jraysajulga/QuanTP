@@ -32,7 +32,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
 
-2.21.19 - All plots can now be viewed via [Plotly](https://plot.ly/javascript/) for interactivity! Instructions for enabling this are [here](#s1a-instructions-for-enabling-interactivity-).
+2.21.19 - All plots can now be viewed via <a href="https://plot.ly/javascript/" target="_blank">Plotly</a> for interactivity! Instructions for enabling this are [here](#s1a-instructions-for-enabling-interactivity-).
 
 Features:
 - Zooming and panning
@@ -44,8 +44,8 @@ Features:
 
 ## S1: Instructions for accessing the QuanTP tool on Jetstream [⤴](#table-of-contents)
 
-1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
-    the Jetstream ([https://jetstream-cloud.org/](https://jetstream-cloud.org/)), a cloud-based resource for scientific
+1. Go to <a href="http://z.umn.edu/proteogenomicsgateway" target="_blank">z.umn.edu/proteogenomicsgateway</a>. This is a public Galaxy gateway hosted on
+    the Jetstream (<a href="https://jetstream-cloud.org/" target="_blank">https://jetstream-cloud.org/</a>), a cloud-based resource for scientific
     computing and research.
 2. The Galaxy Jetstream instance requires that all users input an email address to access
     tools and workflows. To register, perform the following steps:  
@@ -147,7 +147,7 @@ _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1
 (Alli Shaik, A.; Wee, S.; Li, R. H. X.; Li, Z.; Carney, T. J.; Mathavan, S.; Gunaratne, J. Functional Mapping of
 the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014** , _13_ (12), 5536–5550.)
 
-1. To access the zebrafish embryo data, go to “z.umn.edu/proteogenomicsgateway”.
+1. To access the zebrafish embryo data, go to <a href="http://z.umn.edu/proteogenomicsgateway" target="_blank">z.umn.edu/proteogenomicsgateway</a>.
 2. Click on “Shared Data”→ “History”→ “QuanTP_zebrafish_embryo_data”. This will show
     the history with three items in it. Then, click on “Import History” to import the history.
 3. Dataset 1 labeled as “ protein_abundance_log10” is the tabular file containing the
@@ -159,9 +159,9 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 ---
 
 ## S4: Accessing the QuanTP Docker Image [⤴](#table-of-contents)
-_Up-to-date instructions and a Dockerfile can be accessed at [https://z.umn.edu/quantpdocker](https://z.umn.edu/quantpdocker)._
+_Up-to-date instructions and a Dockerfile can be accessed at <a href="http://z.umn.edu/quantpdocker" target="_blank">z.umn.edu/quantpdocker</a>._
 
-1. Download and install Docker ([https://www.docker.com/get-started](https://www.docker.com/get-started)). Once installed,
+1. Download and install Docker (<a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a>). Once installed,
     open it and allow it to initialize.
        a. Open your terminal/command prompt to interact with Docker:
           i. Mac: Press "⌘ + space bar", type "terminal"
@@ -174,7 +174,7 @@ iii. Linux: Ctrl + Alt + T
        itself into a container. This will take a few minutes.
     c. Once the container is initialized, the terminal will output your container's ID and
        take some time to initialize.
-3. Access your initialized QuanTP Docker container at [http://localhost:8080.](http://localhost:8080.)
+3. Access your initialized QuanTP Docker container at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.
     a. Optional: Register an account by following step 2 in the first section ( **Instructions**
        **for accessing the QuanTP tool on Jetstream)**
           i. _Docker containers are inherently temporary, so only register if you plan_
@@ -196,7 +196,7 @@ ii. Using this ID, issue this command: ```docker kill [ID]```
 ---
 
 ## S5: Accessing the QuanTP on the usegalaxy.eu [⤴](#table-of-contents)
-1. Go to “https://usegalaxy.eu”. This is a European Galaxy platform.
+1. Go to <a href="https://usegalaxy.eu" target="_blank">https://usegalaxy.eu</a>. This is a European Galaxy platform.
 2. The Galaxy instance requires that all users input an email address to access tools and
     workflows. To register, perform the following steps:
     - Click on the “Login or Register” tab and click on “Register”. Enter an email address,
@@ -231,5 +231,3 @@ in the “abundance mode”. The first two files should contain gene symbols and
 values for protein or transcript. The third file, experiment design, defines the sample (column)
 names in the first two input files along with defining “case” and “control” groups in the first two
 lines.
-
-
