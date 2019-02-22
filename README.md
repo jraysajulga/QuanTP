@@ -44,20 +44,6 @@ Features:
 
 ---
 
-
-#### Table of Contents:
-   [S1: Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-tool-on-jetstream-)  
-   *[S1a : Instructions for Enabling Interactivity](#s1a-instructions-for-enabling-interactivity-)*  
-   [S2: Instructions for accessing and running the Mouse data](#s2-instructions-for-accessing-and-running-the-mouse-data-)  
-   [S3: Instructions for accessing zebrafish embryo data](#s3-instructions-for-accessing-zebrafish-embryo-data-)  
-   [S4: Accessing the QuanTP Docker Image](#s4-accessing-the-quantp-docker-image-)  
-   [S5: Accessing the QuanTP on the usegalaxy.eu](#s5-accessing-the-quantp-on-the-usegalaxyeu-)  
-   [Supplementary Figure](#supplementary-figure-)  
-
----
-
-# SUPPORTING INFORMATION
-
 ## S1: Instructions for accessing the QuanTP tool on Jetstream [⤴](#table-of-contents)
 
 1. Go to [z.umn.edu/proteogenomicsgateway](http://z.umn.edu/proteogenomicsgateway). This is a public Galaxy gateway hosted on
