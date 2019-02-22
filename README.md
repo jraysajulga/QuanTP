@@ -90,19 +90,17 @@ credentials.
     output for offline viewing and sharing, click on the disk icon. This will
     download the complete HTML output and its supporting files in an archived zip file.
 
-```
-S2: Instructions for accessing and running the Mouse data
+## S2: Instructions for accessing and running the Mouse data
 ```
 (Heydarian M., Luperchio T.R., Cutler J., Mitchell C.J., Kim M.S., Pandey A., Sollner-Webb B., Reddy K.
 Prediction of Gene Activity in Early B Cell Development Based on an Integrative Multi-Omics Analysis.
 _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1000302)
-
+```
 1. To access the inputs for the mouse data click on “Shared Data”→ “Data libraries”→
     “QuanTP Inputs” → “QuanTP_mouse_input **”,** select all files in the folder**.** Then, click on
        to import all the input files. The input file consists of protein, transcript
     expression data and an experimental design file, all in tabular format. _For demo_
     _purposes all these datasets have been trimmed to contain only a small amount of data._
-
 
 2. Once the mouse files have been imported, they will show up in the active History. The
     history consists of two input files, a Protein_log_data.txt (protein expression data) and
@@ -114,20 +112,19 @@ _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1
     the appropriate inputs.
 5. Select the below mentioned inputs and then click on “ **Execute** ”
 
-```
-a. Input Protein Expression File : “Protein_log_data.txt”
-b. Input RNA Expression File : “Transcript_log_data.txt”
-c. Select data type: Log fold-change values (or single condition abundance without
-replicates in single column) data
-d. Influential Observation cutoff : “4”
-e. K-mean clustering: Number of clusters : “4” (default)
-f. Hierarchical clustering: Number of clusters (from Heatmap) : “5” (default)
-```
+    - Input Protein Expression File : “Protein_log_data.txt”
+    - Input RNA Expression File : “Transcript_log_data.txt”
+    - Select data type: Log fold-change values (or single condition abundance without
+    replicates in single column) data
+    - Influential Observation cutoff : “4”
+    - K-mean clustering: Number of clusters : “4” (default)
+    - Hierarchical clustering: Number of clusters (from Heatmap) : “5” (default)
+
 6. Once the tool is executed, the output will show up on the active history pane. It will be
     displayed in yellow color while running and green once completed. The output of the tool
     is in the HTML format. To view this output, click on the eye icon.
 
-**S3: Instructions for accessing zebrafish embryo data**
+## S3: Instructions for accessing zebrafish embryo data
 (Alli Shaik, A.; Wee, S.; Li, R. H. X.; Li, Z.; Carney, T. J.; Mathavan, S.; Gunaratne, J. Functional Mapping of
 the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014** , _13_ (12), 5536–5550.)
 
@@ -141,12 +138,10 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 4. To view this output, click on the eye icon.
 
 
-```
-S4: Accessing the QuanTP Docker Image
-```
-_Up-to-date instructions and a Dockerfile can be accessed at https://z.umn.edu/quantpdocker._
+## S4: Accessing the QuanTP Docker Image
+_Up-to-date instructions and a Dockerfile can be accessed at [https://z.umn.edu/quantpdocker](https://z.umn.edu/quantpdocker)._
 
-1. Download and install Docker (https://www.docker.com/get-started). Once installed,
+1. Download and install Docker ([https://www.docker.com/get-started](https://www.docker.com/get-started)). Once installed,
     open it and allow it to initialize.
        a. Open your terminal/command prompt to interact with Docker:
           i. Mac: Press "⌘ + space bar", type "terminal"
@@ -175,42 +170,38 @@ iii. Linux: Ctrl + Alt + T
        a. If you would like to keep Docker program running on your machine, you can
           terminate your container as follows:
              i. If you don't know your container ID, list out the container IDs with this
-                command: **docker ps**
-ii. Using this ID, issue this command: **docker kill [ID]**
+                command: ```docker ps```
+ii. Using this ID, issue this command: ```docker kill [ID]```
 
 
-```
-S5: Accessing the QuanTP on the usegalaxy.eu
-```
+## S5: Accessing the QuanTP on the usegalaxy.eu
 1. Go to “https://usegalaxy.eu”. This is a European Galaxy platform.
 2. The Galaxy instance requires that all users input an email address to access tools and
     workflows. To register, perform the following steps:
-       a. Click on the “Login or Register” tab and click on “Register”. Enter an email address,
+    - Click on the “Login or Register” tab and click on “Register”. Enter an email address,
           password and public name of choosing. [ **NOTE:** Users choosing to remain
           anonymous can enter an email in the form of "guest@galaxyp.org", along with a
           password and public name of your choosing. Also note that this instance is solely
           for training purposes, and not for long-term use or testing with large datasets.]
-
-```
-b. Once registered, click on the "User" tab and click on “Login” with your user
-credentials.
-```
+    - Once registered, click on the "User" tab and click on “Login” with your user
+    credentials.
 3. Here we provide users with an integrated Galaxy tool’s interactive tour.
 4. Firstly, search for the QuanTP tool in the search bar located on the top left of the Tool Pane.
     Select the QuanTP tool. Now the interface of this tool is displayed on the center pane.
 5. Go to options on the right end of the center Pane and click on it. Select the “Generate Tour”
     option.
+    ![generate-tour](assets/generate-tour)
 6. Once you select the “Generate Tour” option. Galaxy will import the required test Data to
     run the tour. The interactive tour will guide you through the steps required to run the tool.
+    ![tour-prompt](assets/tour-prompt)
 7. Select the appropriate inputs as guided by the tour and once completed, select “Execute”.
 Once the tool is executed, the output will show up on the active history pane. The output of the
 tool is in the HTML format. To view this output, click on the eye icon.
 
-
-```
-Supplementary Figure
-```
+## Supplementary Figure
 **Figure S1.** Example input data file format
+
+![figure-s1](assets/figure-s1)
 
 **Figure S1.** The three tables here describe the format of the input files to QuanTP tool, required
 in the “abundance mode”. The first two files should contain gene symbols and abundance
