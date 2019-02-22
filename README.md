@@ -29,7 +29,7 @@ States
 
 ***Corresponding author(s):**  
 Pratik Jagtap and Krishanpal Anamika  
-Email: pjagtap@umn.edu and anamika_krishanpal@persistent.com  
+Email: [pjagtap@umn.edu](mailto:pjagtap@umn.edu) and [anamika_krishanpal@persistent.com](mailto:anamika_krishanpal@persistent.com) 
 Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ---
