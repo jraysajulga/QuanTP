@@ -57,7 +57,6 @@ password and public name of your choosing. Also note that this instance is solel
 for training purposes, and not for long-term use or testing with large datasets.]  
    - Once registered, click on the "User" tab and click on “Login” with your user
 credentials.
-
 3. The Galaxy interface is divided into three panels: a _Tool pane_ on the left side of the
     interface, a _Main viewing pane_ in the center and a _History pane_ to the right. The _Tool pane_
     consists of organized list of software tools available to users in a particular Galaxy
@@ -65,6 +64,7 @@ credentials.
     the tool, workflow editing space, etc. The _History pane_ contains an ordered list of datasets
     that were uploaded and generated as outputs from tools used for analysis. The active
     history is shown in the _History Pane_ of the user interface.
+    ![galaxy pic](assets/galaxy.png)
 4. The first step for the analysis is to import the required input datafiles. For running any
     workflow, appropriate inputs that the tools requires is critical. To access the inputs for
     this demonstration, we have provided two input data libraries (bovine dataset and mouse
