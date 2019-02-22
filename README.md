@@ -34,6 +34,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ---
 
+### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
 
 ---
 
