@@ -93,7 +93,7 @@ credentials.
 
 ---
 
-### S1A: Instructions for Enabling Interactivity
+### S1A: Instructions for enabling interactivity
 
 1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click on that HTML file to expand the options, then select the visualization icon:  
     ![visualization-icon](assets/visualization-icon.png)
