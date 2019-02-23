@@ -28,7 +28,7 @@ Pratik Jagtap and Krishanpal Anamika
 Email: [pjagtap@umn.edu](mailto:pjagtap@umn.edu) and [anamika_krishanpal@persistent.com](mailto:anamika_krishanpal@persistent.com)  
 Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
-[Original "Supporting Information" Document](https://drive.google.com/file/d/1A6HSRjCMrHUVv5Zk98dMXEV0O_5wjUai/view)
+<a href="https://drive.google.com/file/d/1A6HSRjCMrHUVv5Zk98dMXEV0O_5wjUai/view" target="_blank">Original "Supporting Information" Document</a>
 
 ---
 
@@ -162,7 +162,7 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 
 ## S4: Accessing the QuanTP Docker Image
 _Up-to-date instructions and a Dockerfile can be accessed at <a href="http://z.umn.edu/quantpdocker" target="_blank">z.umn.edu/quantpdocker</a>._
-
+   
 1. Download and install Docker (<a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a>). Once installed,
     open it and allow it to initialize.  
        a. Open your terminal/command prompt to interact with Docker:  
