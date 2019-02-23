@@ -176,12 +176,12 @@ _Up-to-date instructions and a Dockerfile can be accessed at <a href="http://z.u
    - Once the container is initialized, the terminal will output your container's ID and  
        take some time to initialize.  
 3. Access your initialized QuanTP Docker container at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.  
-   - Optional: Register an account by following step 2 in the first section (**[Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-on-jetstream)**)
+   - Optional: Register an account by following step 2 in the first section (**[Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-tool-on-jetstream)**)
         - _Docker containers are inherently temporary, so only register if you plan_
              _on leaving the demonstration open for an extended period of time._
    - To run through bovine data, follow steps 4 through 9 in the first section  
-       (**[Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-on-jetstream)**)
-   - To run through mouse data, go through the second section (**[Supplementary for accessing and running the mouse data](#2-instructions-for-accessing-and-running-the-mouse-data)**)
+       (**[Instructions for accessing the QuanTP tool on Jetstream](#s1-instructions-for-accessing-the-quantp-tool-on-jetstream)**)
+   - To run through mouse data, go through the second section (**[Supplementary for accessing and running the mouse data](#s2-instructions-for-accessing-and-running-the-mouse-data)**)
    - _Note: When referencing the JetStream instructions, filenames on the Docker_  
        _image may differ._  
 4. Once finished with the Docker container, simply exit out of the Docker program to  
