@@ -178,22 +178,22 @@ iii. Linux: Ctrl + Alt + T
        take some time to initialize.
 3. Access your initialized QuanTP Docker container at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.
     a. Optional: Register an account by following step 2 in the first section ( **Instructions**
-       **for accessing the QuanTP tool on Jetstream)**
+       **for accessing the QuanTP tool on Jetstream)**  
           i. _Docker containers are inherently temporary, so only register if you plan_
              _on leaving the demonstration open for an extended period of time._
     b. To run through bovine data, follow steps 4 through 9 in the first section
-       ( **Instructions for accessing the QuanTP tool on Jetstream)**
+       ( **Instructions for accessing the QuanTP tool on Jetstream)**  
     c. To run through mouse data, go through the second section ( **Supplementary for**
-       **accessing and running the Mouse data)**
+       **accessing and running the Mouse data)**  
     _d. Note: When referencing the JetStream instructions, filenames on the Docker_
-       _image may differ._
+       _image may differ._  
 4. Once finished with the Docker container, simply exit out of the Docker program to
-    terminate your session.
+    terminate your session.  
        a. If you would like to keep Docker program running on your machine, you can
-          terminate your container as follows:
+          terminate your container as follows:  
              i. If you don't know your container ID, list out the container IDs with this
-                command: ```docker ps```
-ii. Using this ID, issue this command: ```docker kill [ID]```
+                command: ```docker ps```  
+             ii. Using this ID, issue this command: ```docker kill [ID]```
 
 ---
 
