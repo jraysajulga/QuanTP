@@ -112,7 +112,7 @@ credentials.
     
 ---
 
-## S2: Instructions for accessing and running the Mouse data
+## S2: Instructions for accessing and running the mouse data
 (Heydarian M., Luperchio T.R., Cutler J., Mitchell C.J., Kim M.S., Pandey A., Sollner-Webb B., Reddy K.
 Prediction of Gene Activity in Early B Cell Development Based on an Integrative Multi-Omics Analysis.
 _Journal of Proteomics and Bioinformatics_. (2014) 7:050-063; DOI: 10.4172/jpb.1000302)
