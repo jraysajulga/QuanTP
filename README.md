@@ -195,7 +195,7 @@ ii. Using this ID, issue this command: ```docker kill [ID]```
 
 ---
 
-## S5: Accessing the QuanTP on the usegalaxy.eu
+## S5: Accessing QuanTP on the usegalaxy.eu
 1. Go to <a href="https://usegalaxy.eu" target="_blank">https://usegalaxy.eu</a>. This is a European Galaxy platform.
 2. The Galaxy instance requires that all users input an email address to access tools and
     workflows. To register, perform the following steps:
