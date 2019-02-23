@@ -28,6 +28,8 @@ Pratik Jagtap and Krishanpal Anamika
 Email: [pjagtap@umn.edu](mailto:pjagtap@umn.edu) and [anamika_krishanpal@persistent.com](mailto:anamika_krishanpal@persistent.com)  
 Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
+[Original document](https://drive.google.com/file/d/1A6HSRjCMrHUVv5Zk98dMXEV0O_5wjUai/view)
+
 ---
 
 ### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
@@ -91,7 +93,7 @@ credentials.
 
 ---
 
-### S1a: Instructions for Enabling Interactivity
+### S1A: Instructions for Enabling Interactivity
 
 1. After running QuanTP (v1.1.0 or above) and obtaining an HTML file, click on that HTML file to expand the options, then select the visualization icon:  
     ![visualization-icon](assets/visualization-icon.png)
@@ -102,7 +104,7 @@ credentials.
 #### Things to try:
 
 - Zoom in/out and pan around.
-- Hover over data points to view more information about the selected datum.
+- Hover over data points to view more information about selected data.
 - Activate "compare data on hover" to compare similar points:
     ![volcano-plot](assets/volcano-plot.png)
 - On the heatmap, click and drag a box across a subsection to zoom in. To reset the view, double click the heatmap.
