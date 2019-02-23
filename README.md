@@ -223,7 +223,7 @@ tool is in the HTML format. To view this output, click on the eye icon. ![eye-ic
 
 ---
 
-## Supplementary Figure [⤴](#table-of-contents)
+## Supplementary Figure
 **Figure S1.** Example input data file format
 
 ![figure-s1](assets/figure-s1.png)
