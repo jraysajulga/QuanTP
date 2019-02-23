@@ -164,30 +164,30 @@ the Zebrafish Early Embryo Proteome and Transcriptome. _J. Proteome Res._ **2014
 _Up-to-date instructions and a Dockerfile can be accessed at <a href="http://z.umn.edu/quantpdocker" target="_blank">z.umn.edu/quantpdocker</a>._
 
 1. Download and install Docker (<a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a>). Once installed,
-    open it and allow it to initialize.
-       a. Open your terminal/command prompt to interact with Docker:
-          i. Mac: Press "⌘ + space bar", type "terminal"
-ii. PC: Press "Win-R", type "cmd" and press "Enter"
-iii. Linux: Ctrl + Alt + T
+    open it and allow it to initialize.  
+       a. Open your terminal/command prompt to interact with Docker:  
+          i. Mac: Press "⌘ + space bar", type "terminal"  
+ii. PC: Press "Win-R", type "cmd" and press "Enter"  
+iii. Linux: Ctrl + Alt + T  
 2. Install the container
-    a. Enter this command into your terminal:
-       ```docker run -d - p 8080:80 galaxyp/quantp```
-    b. The QuanTP image will be downloaded from the Docker Hub and will initialize
-       itself into a container. This will take a few minutes.
-    c. Once the container is initialized, the terminal will output your container's ID and
-       take some time to initialize.
-3. Access your initialized QuanTP Docker container at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.
+    a. Enter this command into your terminal:  
+       ```docker run -d - p 8080:80 galaxyp/quantp```  
+    b. The QuanTP image will be downloaded from the Docker Hub and will initialize  
+       itself into a container. This will take a few minutes.  
+    c. Once the container is initialized, the terminal will output your container's ID and  
+       take some time to initialize.  
+3. Access your initialized QuanTP Docker container at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.  
     a. Optional: Register an account by following step 2 in the first section ( **Instructions**
        **for accessing the QuanTP tool on Jetstream)**  
           i. _Docker containers are inherently temporary, so only register if you plan_
              _on leaving the demonstration open for an extended period of time._
-    b. To run through bovine data, follow steps 4 through 9 in the first section
+    b. To run through bovine data, follow steps 4 through 9 in the first section  
        ( **Instructions for accessing the QuanTP tool on Jetstream)**  
-    c. To run through mouse data, go through the second section ( **Supplementary for**
+    c. To run through mouse data, go through the second section ( **Supplementary for**  
        **accessing and running the Mouse data)**  
-    _d. Note: When referencing the JetStream instructions, filenames on the Docker_
+    _d. Note: When referencing the JetStream instructions, filenames on the Docker_  
        _image may differ._  
-4. Once finished with the Docker container, simply exit out of the Docker program to
+4. Once finished with the Docker container, simply exit out of the Docker program to  
     terminate your session.  
        a. If you would like to keep Docker program running on your machine, you can
           terminate your container as follows:  
