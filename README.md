@@ -34,7 +34,7 @@ Phone: +1 612 624 0381 and +91 (20) 6703 3000
 
 ### Newest Update: Interactive plots for QuanTP (versions ≥ 1.1.0)
 
-2.21.19 - All plots can now be viewed via <a href="https://plot.ly/javascript/" target="_blank">Plotly</a> for interactivity! Instructions for enabling this are [here](#s1a-instructions-for-enabling-interactivity-).
+2.21.19 - All plots can now be viewed via <a href="https://plot.ly/javascript/" target="_blank">Plotly</a> for interactivity! Instructions for enabling this are [here](#s1a-instructions-for-enabling-interactivity).
 
 Features:
 - Zooming and panning
@@ -183,7 +183,7 @@ iii. Linux: Ctrl + Alt + T
              _on leaving the demonstration open for an extended period of time._
     b. To run through bovine data, follow steps 4 through 9 in the first section  
        ( **Instructions for accessing the QuanTP tool on Jetstream)**  
-    c. To run through mouse data, go through the second section ( **Supplementary for**  
+    c. To run through mouse data, go through the second section (**Supplementary for**  
        **accessing and running the Mouse data)**  
     _d. Note: When referencing the JetStream instructions, filenames on the Docker_  
        _image may differ._  
